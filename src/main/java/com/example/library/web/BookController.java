@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/books")
 public class BookController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private BookService service;
@@ -20,7 +21,7 @@ public class BookController {
         this.service = service;
     }
 
-    @RequestMapping("/books")
+    @RequestMapping
     public Set<Book> getBooksFiltered(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
         LOGGER.info("filtered books");
         LOGGER.info("title: " + title + ", author: " + author);
@@ -43,19 +44,19 @@ public class BookController {
         return first.toLowerCase().contains(second.toLowerCase());
     }
 
-    @RequestMapping("/books/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
+    @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
     public Book getBook(@PathVariable long bookId) {
         return this.findBookById(bookId);
     }
 
-    @RequestMapping(value = "/books/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addBook(@RequestBody CreateBookResource resource) {
         LOGGER.info("book added: title: " + resource.getTitle() + ", author: " + resource.getAuthor());
         service.registerBook(resource.getTitle(), resource.getAuthor());
         return "book added";
     }
 
-    @RequestMapping(value = "/books/{bookId}/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/{bookId}/update", method = RequestMethod.POST)
     public String updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
         service.updateBook(bookId, resource);
         return "book updated";
