@@ -1,5 +1,6 @@
 package com.example.library.domain;
 
+import com.example.library.web.BookResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,13 @@ public class BookService {
 
     public void registerBook(String title, String author) {
         Book book = new Book(title, author);
+        repository.save(book);
+    }
+
+    public void updateBook(BookResource resource) {
+        Book book = repository.findOne(resource.getId());
+        book.updateAuthor(resource.getAuthor());
+        book.updateTitle(resource.getTitle());
         repository.save(book);
     }
 

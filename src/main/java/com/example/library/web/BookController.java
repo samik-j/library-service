@@ -24,30 +24,49 @@ public class BookController {
     public Set<Book> getBooksFiltered(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
         LOGGER.info("filtered books");
         LOGGER.info("title: " + title + ", author: " + author);
+
+        return this.getBooksPartialMatch(title, author);
+    }
+
+    private Set<Book> getBooksPartialMatch(String title, String author) {
         Set<Book> booksFiltered = new HashSet<>();
         for (Book book : service.findAll()) {
-            if ((title == null || book.getTitle().equals(title)) && (author == null || book.getAuthor().equals(author))) {
+            if ((title == null || this.containsIgnoreCase(book.getTitle(), title))
+                    && (author == null || this.containsIgnoreCase(book.getAuthor(), author))) {
                 booksFiltered.add(book);
             }
         }
         return booksFiltered;
     }
 
+    private boolean containsIgnoreCase(String first, String second) {
+        return first.toLowerCase().contains(second.toLowerCase());
+    }
+
     @RequestMapping("/books/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
-    public Book getBook(@PathVariable int bookId) {
-        for (Book book : service.findAll()) {
-            if (book.getId() == bookId)
-                return book;
-        }
-        return null;
+    public Book getBook(@PathVariable long bookId) {
+        return this.findBookById(bookId);
     }
 
     @RequestMapping(value = "/books/add", method = RequestMethod.POST)
     public String addBook(@RequestBody CreateBookResource resource) {
-        LOGGER.info("book added title: " + resource.getTitle() + ", author: " + resource.getAuthor());
+        LOGGER.info("book added: title: " + resource.getTitle() + ", author: " + resource.getAuthor());
         service.registerBook(resource.getTitle(), resource.getAuthor());
         return "book added";
     }
 
+    @RequestMapping(value = "/books/update", method = RequestMethod.POST)
+    public String updateBook(@RequestBody BookResource resource) {
+        service.updateBook(resource);
+        return "book updated";
+    }
+
+    private Book findBookById(long id) {
+        for (Book book : service.findAll()) {
+            if (book.getId() == id)
+                return book;
+        }
+        return null;
+    }
 
 }

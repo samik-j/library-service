@@ -32,4 +32,18 @@ public class Book {
     public String getAuthor() {
         return author;
     }
+
+    void updateTitle(String title) {
+        if(title == null) {
+            throw new IllegalArgumentException();
+        }
+        this.title = title;
+    }
+
+    void updateAuthor(String author) { // brak modyfikatora znaczu ze jest package private
+        if(author == null) {
+            throw new IllegalArgumentException();
+        }
+        this.author = author;
+    }
 }
