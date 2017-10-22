@@ -20,8 +20,8 @@ public class BookService {
         repository.save(book);
     }
 
-    public void updateBook(BookResource resource) {
-        Book book = repository.findOne(resource.getId());
+    public void updateBook(Long id, BookResource resource) {
+        Book book = repository.findOne(id);
         book.updateAuthor(resource.getAuthor());
         book.updateTitle(resource.getTitle());
         repository.save(book);

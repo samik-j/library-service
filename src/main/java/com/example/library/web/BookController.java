@@ -55,9 +55,9 @@ public class BookController {
         return "book added";
     }
 
-    @RequestMapping(value = "/books/update", method = RequestMethod.POST)
-    public String updateBook(@RequestBody BookResource resource) {
-        service.updateBook(resource);
+    @RequestMapping(value = "/books/{bookId}/update", method = RequestMethod.POST)
+    public String updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
+        service.updateBook(bookId, resource);
         return "book updated";
     }
 
