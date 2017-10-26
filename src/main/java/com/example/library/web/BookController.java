@@ -51,7 +51,7 @@ public class BookController {
         return getBookResource(book);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public BookResource addBook(@RequestBody BookResource resource) {
         LOGGER.info("book added: title: " + resource.getTitle() + ", author: " + resource.getAuthor());
         Book book = this.service.registerBook(resource);
@@ -59,7 +59,7 @@ public class BookController {
         return getBookResource(book);
     }
 
-    @RequestMapping(value = "/{bookId}/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/{bookId}", method = RequestMethod.PUT)
     public BookResource updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
         Book book = this.service.updateBook(bookId, resource);
 

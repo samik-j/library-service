@@ -6,6 +6,15 @@ public class EditionResource {
     private String isbn;
     private long quantity;
 
+    public EditionResource() {
+    }
+
+    public EditionResource(long id, String isbn, long quantity) {
+        this.id = id;
+        this.isbn = isbn;
+        this.quantity = quantity;
+    }
+
     public long getId() {
         return id;
     }

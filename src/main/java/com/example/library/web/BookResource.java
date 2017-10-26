@@ -5,6 +5,9 @@ public class BookResource {
     private String title;
     private String author;
 
+    public BookResource() {
+    }
+
     public BookResource(long id, String title, String author) {
         this.id = id;
         this.title = title;

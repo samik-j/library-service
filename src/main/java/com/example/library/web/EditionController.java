@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/books/{bookId}/editions")
 public class EditionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EditionController.class);
     private EditionService service;
@@ -19,11 +20,16 @@ public class EditionController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/books/{bookId}/editions/add", method = RequestMethod.POST)
-    public String addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) {
+    @RequestMapping(method = RequestMethod.POST)
+    public EditionResource addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) {
         LOGGER.info("book id: " + bookId +
                 ", added edition: " + resource.getIsbn() + ", quantity " + resource.getQuantity());
-        service.registerEdition(bookId, resource);
-        return "edition added";
+        Edition edition = service.registerEdition(bookId, resource);
+        
+        return getEditionResource(edition);
+    }
+
+    private EditionResource getEditionResource(Edition edition) {
+        return new EditionResource(edition.getId(), edition.getIsbn(), edition.getQuantity());
     }
 }

@@ -31,12 +31,6 @@ public class BookService {
         return repository.save(book);
     }
 
-    public void registerEdition(long id, Edition edition) {
-        Book book = this.repository.findOne(id);
-        book.addEdition(edition);
-        this.repository.save(book);
-    }
-
     public Book findBookById(long id) {
         return this.repository.findOne(id);
     }
