@@ -5,6 +5,12 @@ public class BookResource {
     private String title;
     private String author;
 
+    public BookResource(long id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+    }
+
     public long getId() {
         return id;
     }

@@ -1,9 +1,7 @@
 package com.example.library.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Book {
@@ -12,8 +10,10 @@ public class Book {
     private long id;
     private String title;
     private String author;
+    @OneToMany(mappedBy = "book")
+    private Set<Edition> editions;
 
-    private Book() {
+    public Book() {
     }
 
     public Book(String title, String author) {
@@ -45,5 +45,13 @@ public class Book {
             throw new IllegalArgumentException();
         }
         this.author = author;
+    }
+
+    void addEdition(Edition edition) {
+        this.editions.add(edition);
+    }
+
+    public Set<Edition> getEditions() {
+        return editions;
     }
 }

@@ -15,19 +15,29 @@ public class BookService {
         this.repository = repository;
     }
 
-    public void registerBook(String title, String author) {
-        Book book = new Book(title, author);
-        repository.save(book);
+    public List<Book> findAll() {
+        return this.repository.findAll();
     }
 
-    public void updateBook(Long id, BookResource resource) {
-        Book book = repository.findOne(id);
+    public Book registerBook(BookResource resource) {
+        Book book = new Book(resource.getTitle(), resource.getAuthor());
+        return repository.save(book);
+    }
+
+    public Book updateBook(Long id, BookResource resource) {
+        Book book = this.repository.findOne(id);
         book.updateAuthor(resource.getAuthor());
         book.updateTitle(resource.getTitle());
-        repository.save(book);
+        return repository.save(book);
     }
 
-    public List<Book> findAll() {
-        return repository.findAll();
+    public void registerEdition(long id, Edition edition) {
+        Book book = this.repository.findOne(id);
+        book.addEdition(edition);
+        this.repository.save(book);
+    }
+
+    public Book findBookById(long id) {
+        return this.repository.findOne(id);
     }
 }

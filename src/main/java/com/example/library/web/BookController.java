@@ -22,19 +22,19 @@ public class BookController {
     }
 
     @RequestMapping
-    public Set<Book> getBooksFiltered(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
+    public Set<BookResource> getBooksFiltered(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
         LOGGER.info("filtered books");
         LOGGER.info("title: " + title + ", author: " + author);
 
         return this.getBooksPartialMatch(title, author);
     }
 
-    private Set<Book> getBooksPartialMatch(String title, String author) {
-        Set<Book> booksFiltered = new HashSet<>();
-        for (Book book : service.findAll()) {
+    private Set<BookResource> getBooksPartialMatch(String title, String author) {
+        Set<BookResource> booksFiltered = new HashSet<>();
+        for (Book book : this.service.findAll()) {
             if ((title == null || this.containsIgnoreCase(book.getTitle(), title))
                     && (author == null || this.containsIgnoreCase(book.getAuthor(), author))) {
-                booksFiltered.add(book);
+                booksFiltered.add(getBookResource(book));
             }
         }
         return booksFiltered;
@@ -45,29 +45,29 @@ public class BookController {
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
-    public Book getBook(@PathVariable long bookId) {
-        return this.findBookById(bookId);
+    public BookResource getBook(@PathVariable long bookId) {
+        Book book = service.findBookById(bookId);
+
+        return getBookResource(book);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addBook(@RequestBody CreateBookResource resource) {
+    public BookResource addBook(@RequestBody BookResource resource) {
         LOGGER.info("book added: title: " + resource.getTitle() + ", author: " + resource.getAuthor());
-        service.registerBook(resource.getTitle(), resource.getAuthor());
-        return "book added";
+        Book book = this.service.registerBook(resource);
+
+        return getBookResource(book);
     }
 
     @RequestMapping(value = "/{bookId}/update", method = RequestMethod.POST)
-    public String updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
-        service.updateBook(bookId, resource);
-        return "book updated";
+    public BookResource updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
+        Book book = this.service.updateBook(bookId, resource);
+
+        return getBookResource(book);
     }
 
-    private Book findBookById(long id) {
-        for (Book book : service.findAll()) {
-            if (book.getId() == id)
-                return book;
-        }
-        return null;
+    private BookResource getBookResource(Book book) {
+        return new BookResource(book.getId(), book.getTitle(), book.getAuthor());
     }
 
 }
