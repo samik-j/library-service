@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/books/{bookId}/editions")
 public class EditionController {
@@ -19,18 +23,41 @@ public class EditionController {
         this.service = service;
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public Set<EditionResource> getEditionsFiltered(@RequestParam(required = false) String editionIsbn) {
+        LOGGER.info("Filtered editions");
+        LOGGER.info("isbn: " + editionIsbn);
+
+        return getEditionResources(service.findByIsbn(editionIsbn));
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public EditionResource addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) {
-        LOGGER.info("book id: " + bookId +
+        LOGGER.info("Book id: " + bookId +
                 ", added edition: " + resource.getIsbn() + ", quantity " + resource.getQuantity());
         Edition edition = service.registerEdition(bookId, resource);
 
         return getEditionResource(edition);
     }
 
-    private EditionResource getEditionResource(Edition edition) {
-        return new EditionResource(edition.getId(), edition.getIsbn(), edition.getQuantity());
+    @RequestMapping(value = "/{editionId}", method = RequestMethod.PUT)
+    public boolean borrowEdition(@PathVariable long bookId, @PathVariable long editionId) {
+        LOGGER.info("Book id: {}, borrowed edition id: {}", bookId, editionId);
+
+        return service.borrow(editionId);
     }
 
-    // z borrow zwroci true albo false
+    private EditionResource getEditionResource(Edition edition) {
+        return new EditionResource(edition);
+    }
+
+    private Set<EditionResource> getEditionResources(List<Edition> editions) {
+        Set<EditionResource> editionResources = new HashSet<>();
+
+        for(Edition edition : editions)
+            editionResources.add(getEditionResource(edition));
+
+        return editionResources;
+    }
+    
 }

@@ -1,5 +1,7 @@
 package com.example.library.web;
 
+import com.example.library.domain.Book;
+
 public class BookResource {
 
     private long id;
@@ -9,10 +11,10 @@ public class BookResource {
     public BookResource() {
     }
 
-    public BookResource(long id, String title, String author) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
+    public BookResource(Book book) {
+        this.id = book.getId();
+        this.title = book.getTitle();
+        this.author = book.getAuthor();
     }
 
     public long getId() {

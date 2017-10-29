@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -25,7 +26,7 @@ public class BookController {
 
     @RequestMapping
     public Set<BookResource> getBooksFiltered(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
-        LOGGER.info("filtered books");
+        LOGGER.info("Filtered books");
         LOGGER.info("title: " + title + ", author: " + author);
 
         return getBookResources(service.findByTitleAndAuthor(title, author));
@@ -40,7 +41,7 @@ public class BookController {
 
     @RequestMapping(method = RequestMethod.POST)
     public BookResource addBook(@RequestBody BookResource resource) {
-        LOGGER.info("book added: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
+        LOGGER.info("Book added: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
         Book book = service.registerBook(resource);
 
         return getBookResource(book);
@@ -54,11 +55,12 @@ public class BookController {
     }
 
     private BookResource getBookResource(Book book) {
-        return new BookResource(book.getId(), book.getTitle(), book.getAuthor());
+        return new BookResource(book);
     }
 
-    private Set<BookResource> getBookResources(Set<Book> books) {
+    private Set<BookResource> getBookResources(List<Book> books) {
         Set<BookResource> bookResources = new HashSet<>();
+
         for(Book book : books)
             bookResources.add(getBookResource(book));
 

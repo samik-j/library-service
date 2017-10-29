@@ -1,18 +1,22 @@
 package com.example.library.web;
 
+import com.example.library.domain.Edition;
+
 public class EditionResource {
 
     private long id;
     private String isbn;
     private long quantity;
+    private long borrowed;
 
     public EditionResource() {
     }
 
-    public EditionResource(long id, String isbn, long quantity) {
-        this.id = id;
-        this.isbn = isbn;
-        this.quantity = quantity;
+    public EditionResource(Edition edition) {
+        this.id = edition.getId();
+        this.isbn = edition.getIsbn();
+        this.quantity = edition.getQuantity();
+        this.borrowed = edition.getBorrowed();
     }
 
     public long getId() {
@@ -39,4 +43,11 @@ public class EditionResource {
         this.quantity = quantity;
     }
 
+    public long getBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(long borrowed) {
+        this.borrowed = borrowed;
+    }
 }

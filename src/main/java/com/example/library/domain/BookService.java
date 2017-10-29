@@ -20,10 +20,6 @@ public class BookService {
         this.repository = repository;
     }
 
-    public List<Book> findAll() {
-        return repository.findAll();
-    }
-
     public Book registerBook(BookResource resource) {
         Book book = new Book(resource.getTitle(), resource.getAuthor());
 
@@ -42,15 +38,18 @@ public class BookService {
         return repository.findOne(id);
     }
 
-    public Set<Book> findByTitleAndAuthor(String title, String author) {
+    public List<Book> findByTitleAndAuthor(String title, String author) {
         if(title != null && author != null) {
             return repository.findByTitleContainingAndAuthorContaining(title, author);
         }
         else if(author != null) {
             return repository.findByAuthorContaining(author);
         }
-        else {
+        else if(title != null){
             return repository.findByTitleContaining(title);
+        }
+        else {
+            return repository.findAll();
         }
     }
 }

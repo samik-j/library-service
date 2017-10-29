@@ -2,12 +2,12 @@ package com.example.library.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Set;
+import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long>{ // <Book, Long> <typ Entity, typ id ktore ma Entity>
 
-    Set<Book> findByTitleContaining(String title);
-    Set<Book> findByAuthorContaining(String author);
-    Set<Book> findByTitleContainingAndAuthorContaining(String title, String author);
+    List<Book> findByTitleContaining(String title);
+    List<Book> findByAuthorContaining(String author);
+    List<Book> findByTitleContainingAndAuthorContaining(String title, String author);
 
 }
