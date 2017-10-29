@@ -1,6 +1,7 @@
 package com.example.library.web;
 
 public class BookResource {
+
     private long id;
     private String title;
     private String author;

@@ -2,12 +2,17 @@ package com.example.library.domain;
 
 import com.example.library.web.BookResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BookService {
+
     private BookRepository repository;
 
     @Autowired
@@ -16,22 +21,36 @@ public class BookService {
     }
 
     public List<Book> findAll() {
-        return this.repository.findAll();
+        return repository.findAll();
     }
 
     public Book registerBook(BookResource resource) {
         Book book = new Book(resource.getTitle(), resource.getAuthor());
+
         return repository.save(book);
     }
 
     public Book updateBook(Long id, BookResource resource) {
-        Book book = this.repository.findOne(id);
+        Book book = repository.findOne(id);
         book.updateAuthor(resource.getAuthor());
         book.updateTitle(resource.getTitle());
+
         return repository.save(book);
     }
 
     public Book findBookById(long id) {
-        return this.repository.findOne(id);
+        return repository.findOne(id);
+    }
+
+    public Set<Book> findByTitleAndAuthor(String title, String author) {
+        if(title != null && author != null) {
+            return repository.findByTitleContainingAndAuthorContaining(title, author);
+        }
+        else if(author != null) {
+            return repository.findByAuthorContaining(author);
+        }
+        else {
+            return repository.findByTitleContaining(title);
+        }
     }
 }

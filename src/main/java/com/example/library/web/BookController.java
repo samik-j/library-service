@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/books")
 public class BookController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private BookService service;
 
@@ -26,22 +28,7 @@ public class BookController {
         LOGGER.info("filtered books");
         LOGGER.info("title: " + title + ", author: " + author);
 
-        return this.getBooksPartialMatch(title, author);
-    }
-
-    private Set<BookResource> getBooksPartialMatch(String title, String author) {
-        Set<BookResource> booksFiltered = new HashSet<>();
-        for (Book book : this.service.findAll()) {
-            if ((title == null || this.containsIgnoreCase(book.getTitle(), title))
-                    && (author == null || this.containsIgnoreCase(book.getAuthor(), author))) {
-                booksFiltered.add(getBookResource(book));
-            }
-        }
-        return booksFiltered;
-    }
-
-    private boolean containsIgnoreCase(String first, String second) {
-        return first.toLowerCase().contains(second.toLowerCase());
+        return getBookResources(service.findByTitleAndAuthor(title, author));
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
@@ -53,15 +40,15 @@ public class BookController {
 
     @RequestMapping(method = RequestMethod.POST)
     public BookResource addBook(@RequestBody BookResource resource) {
-        LOGGER.info("book added: title: " + resource.getTitle() + ", author: " + resource.getAuthor());
-        Book book = this.service.registerBook(resource);
+        LOGGER.info("book added: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
+        Book book = service.registerBook(resource);
 
         return getBookResource(book);
     }
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.PUT)
     public BookResource updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
-        Book book = this.service.updateBook(bookId, resource);
+        Book book = service.updateBook(bookId, resource);
 
         return getBookResource(book);
     }
@@ -70,4 +57,11 @@ public class BookController {
         return new BookResource(book.getId(), book.getTitle(), book.getAuthor());
     }
 
+    private Set<BookResource> getBookResources(Set<Book> books) {
+        Set<BookResource> bookResources = new HashSet<>();
+        for(Book book : books)
+            bookResources.add(getBookResource(book));
+
+        return bookResources;
+    }
 }

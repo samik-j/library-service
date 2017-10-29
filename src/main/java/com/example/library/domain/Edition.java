@@ -14,13 +14,13 @@ public class Edition {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    public Edition() {
+    }
+
     public Edition(String isbn, long quantity, Book book) {
         this.isbn = isbn;
         this.quantity = quantity;
         this.book = book;
-    }
-
-    public Edition() {
     }
 
     public long getId() {

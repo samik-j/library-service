@@ -5,6 +5,7 @@ import java.util.Set;
 
 @Entity
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,6 +34,10 @@ public class Book {
         return author;
     }
 
+    public Set<Edition> getEditions() {
+        return editions;
+    }
+
     void updateTitle(String title) {
         if(title == null) {
             throw new IllegalArgumentException();
@@ -48,10 +53,7 @@ public class Book {
     }
 
     void addEdition(Edition edition) {
-        this.editions.add(edition);
+        editions.add(edition);
     }
 
-    public Set<Edition> getEditions() {
-        return editions;
-    }
 }
