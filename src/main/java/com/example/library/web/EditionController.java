@@ -35,7 +35,8 @@ public class EditionController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public EditionResource addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) {
+    public EditionResource addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) { //tu mi tworzy EditionResource z body.
+        // i tworzy za pomoca set() tak? i co jak nie podam wszystkich parametrow ktore sa w resource? w sensie id? zostaje puste?
         LOGGER.info("Book id: {}, Edition added: isbn: {}, quantity: {}",
                 bookId, resource.getIsbn(), resource.getQuantity());
         Edition edition = service.registerEdition(bookId, resource);
@@ -43,12 +44,15 @@ public class EditionController {
         return getEditionResource(edition);
     }
 
+    /*
+    TO TEZ TU JEST NIEPOTRZEBNE
     @RequestMapping(value = "/{editionId}", method = RequestMethod.PUT)
     public boolean borrowEdition(@PathVariable long bookId, @PathVariable long editionId) {
         LOGGER.info("Book id: {}, borrowed Edition id: {}", bookId, editionId);
 
         return service.borrow(editionId);
     }
+    */
 
     private EditionResource getEditionResource(Edition edition) {
         return new EditionResource(edition);

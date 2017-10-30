@@ -8,6 +8,7 @@ public class EditionResource {
     private String isbn;
     private long quantity;
     private long borrowed;
+    private long bookId; //to jest niepotrzbene?
 
     public EditionResource() {
     }
@@ -17,6 +18,7 @@ public class EditionResource {
         this.isbn = edition.getIsbn();
         this.quantity = edition.getQuantity();
         this.borrowed = edition.getBorrowed();
+        this.bookId = edition.getBook().getId();
     }
 
     public long getId() {
@@ -49,5 +51,13 @@ public class EditionResource {
 
     public void setBorrowed(long borrowed) {
         this.borrowed = borrowed;
+    }
+
+    public long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(long bookId) {
+        this.bookId = bookId;
     }
 }

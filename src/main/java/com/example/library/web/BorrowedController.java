@@ -23,11 +23,11 @@ public class BorrowedController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/{userId}/{editionId}", method = RequestMethod.POST)
-    public boolean borrow(@PathVariable long userId, @PathVariable long editionId) {
-        LOGGER.info("Borrowed by userId: {}, editionId: {}", userId, editionId);
+    @RequestMapping( method = RequestMethod.POST)
+    public boolean borrow(@RequestBody BorrowedResource resource) {
+        LOGGER.info("Borrowed by userId: {}, editionId: {}", resource.getUserId(), resource.getEditionId());
 
-        return service.registerBorrowed(userId, editionId);
+        return service.registerBorrowed(resource);
     }
 
     @RequestMapping(method = RequestMethod.GET)

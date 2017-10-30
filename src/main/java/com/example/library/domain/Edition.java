@@ -17,7 +17,7 @@ public class Edition {
     private long borrowed;
     @ManyToOne
     @JoinColumn(name = "book_id")
-    @JsonManagedReference
+    @JsonManagedReference //to dodalam
     private Book book;
 
     Edition() {

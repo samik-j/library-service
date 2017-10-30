@@ -24,13 +24,13 @@ public class BorrowedService{
         return borrowedRepository.findAll();
     }
 
-    public boolean registerBorrowed(long userId, long editionId) {
-        Edition edition = editionRepository.findOne(editionId);
+    public boolean registerBorrowed(BorrowedResource resource) {
+        Edition edition = editionRepository.findOne(resource.getEditionId());
         boolean canBorrow = edition.borrow();
         editionRepository.save(edition);
 
         if(canBorrow) {
-            Borrowed borrowed = new Borrowed(userRepository.findOne(userId), editionRepository.findOne(editionId));
+            Borrowed borrowed = new Borrowed(userRepository.findOne(resource.getUserId()), editionRepository.findOne(resource.getEditionId()));
 
             borrowedRepository.save(borrowed);
 

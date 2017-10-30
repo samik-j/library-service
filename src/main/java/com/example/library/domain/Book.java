@@ -13,8 +13,8 @@ public class Book {
     private long id;
     private String title;
     private String author;
-    @OneToMany
-    @JsonBackReference
+    @OneToMany //tu byl ten fetch type
+    @JsonBackReference //to dodalam
     private Set<Edition> editions;
 
     Book() {

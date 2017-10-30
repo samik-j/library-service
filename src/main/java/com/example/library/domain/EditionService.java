@@ -35,12 +35,14 @@ public class EditionService {
             return editionRepository.findAll();
         }
     }
-
+/*
+TO TERAZ JEST NIEPOTRZEBNE TU
     public boolean borrow(long editionId) {
         Edition edition = editionRepository.findOne(editionId);
         boolean borrowed = edition.borrow();
         editionRepository.save(edition);
         return borrowed;
     }
+    */
 
 }

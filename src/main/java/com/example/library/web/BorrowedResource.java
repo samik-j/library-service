@@ -7,8 +7,10 @@ import com.example.library.domain.User;
 public class BorrowedResource {
 
     private long id;
-    private User user;
-    private Edition edition;
+    //wczesniej mialam user i edition ale wystarczy miec tu ich id tylko
+    private long userId;
+    private long editionId;
+    //czy to jest potrzebne tu? w sensie obie daty?
     private String dateBorrowed;
     private String dateToReturn;
     private boolean isOverdue;
@@ -18,8 +20,8 @@ public class BorrowedResource {
 
     public BorrowedResource(Borrowed borrowed) {
         this.id = borrowed.getId();
-        this.user = borrowed.getUser();
-        this.edition = borrowed.getEdition();
+        this.userId = borrowed.getUser().getId();
+        this.editionId = borrowed.getEdition().getId();
         this.dateBorrowed = borrowed.getDateBorrowed();
         this.dateToReturn = borrowed.getDateToReturn();
         this.isOverdue = borrowed.isOverdue();
@@ -33,20 +35,20 @@ public class BorrowedResource {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public Edition getEdition() {
-        return edition;
+    public long getEditionId() {
+        return editionId;
     }
 
-    public void setEdition(Edition edition) {
-        this.edition = edition;
+    public void setEditionId(long editionId) {
+        this.editionId = editionId;
     }
 
     public String getDateBorrowed() {
