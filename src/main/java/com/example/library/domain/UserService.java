@@ -30,4 +30,11 @@ public class UserService {
             return repository.findAll();
         }
     }
+
+    public User updateUser(long userId, UserResource resource) {
+        User user = repository.findOne(userId);
+        user.updateLastName(resource.getLastName());
+
+        return repository.save(user);
+    }
 }

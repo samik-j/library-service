@@ -39,6 +39,13 @@ public class UserController {
         return getUserResource(user);
     }
 
+    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+    public UserResource updateUser(@PathVariable long userId, @RequestBody UserResource resource) {
+        User user = service.updateUser(userId, resource);
+
+        return getUserResource(user);
+    }
+
     private UserResource getUserResource(User user) {
         return new UserResource(user);
     }
