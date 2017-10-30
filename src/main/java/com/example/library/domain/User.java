@@ -1,9 +1,9 @@
 package com.example.library.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -16,7 +16,7 @@ public class User {
     private String lastName;
     private String dateJoined;
 
-    private User() {
+    User() {
     }
 
     User(String firstName, String lastName) {

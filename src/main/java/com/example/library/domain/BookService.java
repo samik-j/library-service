@@ -2,13 +2,9 @@ package com.example.library.domain;
 
 import com.example.library.web.BookResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class BookService {

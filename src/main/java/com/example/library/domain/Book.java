@@ -1,5 +1,7 @@
 package com.example.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,10 +13,11 @@ public class Book {
     private long id;
     private String title;
     private String author;
-    @OneToMany(mappedBy = "book")
+    @OneToMany
+    @JsonBackReference
     private Set<Edition> editions;
 
-    private Book() {
+    Book() {
     }
 
     Book(String title, String author) {
@@ -36,6 +39,18 @@ public class Book {
 
     public Set<Edition> getEditions() {
         return editions;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setEditions(Set<Edition> editions) {
+        this.editions = editions;
     }
 
     void updateTitle(String title) {

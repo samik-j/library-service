@@ -1,5 +1,9 @@
 package com.example.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,14 +15,15 @@ public class Edition {
     private String isbn;
     private long quantity;
     private long borrowed;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "book_id")
+    @JsonManagedReference
     private Book book;
 
-    public Edition() {
+    Edition() {
     }
 
-    private Edition(String isbn, long quantity, Book book) {
+    Edition(String isbn, long quantity, Book book) {
         this.isbn = isbn;
         this.quantity = quantity;
         this.book = book;
