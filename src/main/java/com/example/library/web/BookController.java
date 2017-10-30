@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,11 +24,13 @@ public class BookController {
     }
 
     @RequestMapping
-    public Set<BookResource> getBooksFiltered(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
-        LOGGER.info("Filtered books");
-        LOGGER.info("title: " + title + ", author: " + author);
+    public Set<BookResource> getBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
+        LOGGER.info("Books filtered by: title: {}, author: {}", title, author);
 
-        return getBookResources(service.findByTitleAndAuthor(title, author));
+        return getBookResources(service.findBooks(title, author));
+        //czy w controllerze zrobic metode ktora bedzie
+        // if title & author == null service.findAll()
+        // else service.findBooks(title, author)??
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
@@ -61,8 +62,9 @@ public class BookController {
     private Set<BookResource> getBookResources(List<Book> books) {
         Set<BookResource> bookResources = new HashSet<>();
 
-        for(Book book : books)
+        for(Book book : books) {
             bookResources.add(getBookResource(book));
+        }
 
         return bookResources;
     }

@@ -14,10 +14,10 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private Set<Edition> editions;
 
-    public Book() {
+    private Book() {
     }
 
-    public Book(String title, String author) {
+    Book(String title, String author) {
         this.title = title;
         this.author = author;
     }

@@ -24,17 +24,20 @@ public class EditionController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Set<EditionResource> getEditionsFiltered(@RequestParam(required = false) String editionIsbn) {
-        LOGGER.info("Filtered editions");
-        LOGGER.info("isbn: " + editionIsbn);
+    public Set<EditionResource> getEditions(@RequestParam(required = false) String editionIsbn) {
+        LOGGER.info("Editions filtered: isbn: {}", editionIsbn);
 
-        return getEditionResources(service.findByIsbn(editionIsbn));
+        return getEditionResources(service.findEditions(editionIsbn));
+        //to samo co w book metoda
+        // if editionIsbn == null service.findAll()
+        // else service.findByIsbn(isbn)?
+        // bo tu jest wieksza roznica niz w book bo findAll zwraca list a findByIsbn zwraca jedno Edition
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public EditionResource addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) {
-        LOGGER.info("Book id: " + bookId +
-                ", added edition: " + resource.getIsbn() + ", quantity " + resource.getQuantity());
+        LOGGER.info("Book id: {}, Edition added: isbn: {}, quantity: {}",
+                bookId, resource.getIsbn(), resource.getQuantity());
         Edition edition = service.registerEdition(bookId, resource);
 
         return getEditionResource(edition);
@@ -42,7 +45,7 @@ public class EditionController {
 
     @RequestMapping(value = "/{editionId}", method = RequestMethod.PUT)
     public boolean borrowEdition(@PathVariable long bookId, @PathVariable long editionId) {
-        LOGGER.info("Book id: {}, borrowed edition id: {}", bookId, editionId);
+        LOGGER.info("Book id: {}, borrowed Edition id: {}", bookId, editionId);
 
         return service.borrow(editionId);
     }
@@ -54,10 +57,11 @@ public class EditionController {
     private Set<EditionResource> getEditionResources(List<Edition> editions) {
         Set<EditionResource> editionResources = new HashSet<>();
 
-        for(Edition edition : editions)
+        for(Edition edition : editions) {
             editionResources.add(getEditionResource(edition));
+        }
 
         return editionResources;
     }
-    
+
 }

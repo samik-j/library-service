@@ -11,7 +11,7 @@ public class BookResource {
     public BookResource() {
     }
 
-    public BookResource(Book book) {
+    BookResource(Book book) {
         this.id = book.getId();
         this.title = book.getTitle();
         this.author = book.getAuthor();

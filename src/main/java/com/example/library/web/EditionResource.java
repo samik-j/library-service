@@ -12,7 +12,7 @@ public class EditionResource {
     public EditionResource() {
     }
 
-    public EditionResource(Edition edition) {
+    EditionResource(Edition edition) {
         this.id = edition.getId();
         this.isbn = edition.getIsbn();
         this.quantity = edition.getQuantity();

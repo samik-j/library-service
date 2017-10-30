@@ -18,14 +18,14 @@ public class Edition {
     public Edition() {
     }
 
-    public Edition(String isbn, long quantity, Book book) {
+    private Edition(String isbn, long quantity, Book book) {
         this.isbn = isbn;
         this.quantity = quantity;
         this.book = book;
         this.borrowed = 0;
     }
 
-    public Edition(String isbn, long quantity, long borrowed, Book book) {
+    Edition(String isbn, long quantity, long borrowed, Book book) {
         this.isbn = isbn;
         this.quantity = quantity;
         this.borrowed = borrowed;
@@ -68,7 +68,7 @@ public class Edition {
         this.borrowed = borrowed;
     }
 
-    public boolean borrow() {
+    boolean borrow() {
         if(quantity > borrowed) {
             ++borrowed;
             return true;

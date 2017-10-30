@@ -9,12 +9,12 @@ import java.util.List;
 @Service
 public class EditionService {
 
-    private EditionRepository repository;
+    private EditionRepository editionRepository;
     private BookRepository bookRepository;
 
     @Autowired
-    public EditionService(EditionRepository repository, BookRepository bookRepository) {
-        this.repository = repository;
+    public EditionService(EditionRepository editionRepository, BookRepository bookRepository) {
+        this.editionRepository = editionRepository;
         this.bookRepository = bookRepository;
     }
 
@@ -22,24 +22,24 @@ public class EditionService {
         Book book = bookRepository.findOne(bookId);
         Edition edition = new Edition(resource.getIsbn(), resource.getQuantity(), resource.getBorrowed(), book);
         book.addEdition(edition);
-        Edition savedEdition = repository.save(edition);
+        Edition savedEdition = editionRepository.save(edition);
         bookRepository.save(book);
         return savedEdition;
     }
 
-    public List<Edition> findByIsbn(String isbn) {
+    public List<Edition> findEditions(String isbn) {
         if(isbn != null) {
-            return repository.findByIsbn(isbn);
+            return editionRepository.findByIsbn(isbn);
         }
         else {
-            return repository.findAll();
+            return editionRepository.findAll();
         }
     }
 
     public boolean borrow(long editionId) {
-        Edition edition = repository.findOne(editionId);
+        Edition edition = editionRepository.findOne(editionId);
         boolean borrowed = edition.borrow();
-        repository.save(edition);
+        editionRepository.save(edition);
         return borrowed;
     }
 
