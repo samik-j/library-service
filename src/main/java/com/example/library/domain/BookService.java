@@ -35,17 +35,6 @@ public class BookService {
     }
 
     public List<Book> findBooks(String title, String author) {
-        if(title != null && author != null) {
-            return repository.findByTitleContainingAndAuthorContaining(title, author);
-        }
-        else if(author != null) {
-            return repository.findByAuthorContaining(author);
-        }
-        else if(title != null){
-            return repository.findByTitleContaining(title);
-        }
-        else {
-            return repository.findAll();
-        }
+        return repository.findBooks(title, author);
     }
 }
