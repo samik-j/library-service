@@ -2,7 +2,7 @@ package com.example.library.web;
 
 import com.example.library.domain.Edition;
 
-public class EditionResource {
+public class EditionResource { // czy te resource maja miec minimalna ilosc danych do stworzenia obiektow tych klas bazowych obiektow?
 
     private long id;
     private String isbn;

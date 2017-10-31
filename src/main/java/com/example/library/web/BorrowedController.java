@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/borrow")
+@RequestMapping("/borrowed")
 public class BorrowedController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BorrowedController.class);

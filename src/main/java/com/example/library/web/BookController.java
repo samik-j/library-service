@@ -28,9 +28,6 @@ public class BookController {
         LOGGER.info("Books filtered by: title: {}, author: {}", title, author);
 
         return getBookResources(service.findBooks(title, author));
-        //czy w controllerze zrobic metode ktora bedzie
-        // if title & author == null service.findAll()
-        // else service.findBooks(title, author)??
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu

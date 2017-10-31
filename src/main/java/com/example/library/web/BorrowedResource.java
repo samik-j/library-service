@@ -1,16 +1,12 @@
 package com.example.library.web;
 
 import com.example.library.domain.Borrowed;
-import com.example.library.domain.Edition;
-import com.example.library.domain.User;
 
 public class BorrowedResource {
 
     private long id;
-    //wczesniej mialam user i edition ale wystarczy miec tu ich id tylko
     private long userId;
     private long editionId;
-    //czy to jest potrzebne tu? w sensie obie daty?
     private String dateBorrowed;
     private String dateToReturn;
     private boolean isOverdue;

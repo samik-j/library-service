@@ -20,7 +20,7 @@ public class EditionService {
 
     public Edition registerEdition(long bookId, EditionResource resource) {
         Book book = bookRepository.findOne(bookId);
-        Edition edition = new Edition(resource.getIsbn(), resource.getQuantity(), resource.getBorrowed(), book);
+        Edition edition = new Edition(resource.getIsbn(), resource.getQuantity(), book);
         book.addEdition(edition);
         Edition savedEdition = editionRepository.save(edition);
         bookRepository.save(book);
@@ -35,14 +35,5 @@ public class EditionService {
             return editionRepository.findAll();
         }
     }
-/*
-TO TERAZ JEST NIEPOTRZEBNE TU
-    public boolean borrow(long editionId) {
-        Edition edition = editionRepository.findOne(editionId);
-        boolean borrowed = edition.borrow();
-        editionRepository.save(edition);
-        return borrowed;
-    }
-    */
 
 }

@@ -17,7 +17,6 @@ public class Edition {
     private long borrowed;
     @ManyToOne
     @JoinColumn(name = "book_id")
-    @JsonManagedReference //to dodalam
     private Book book;
 
     Edition() {
@@ -28,13 +27,6 @@ public class Edition {
         this.quantity = quantity;
         this.book = book;
         this.borrowed = 0;
-    }
-
-    Edition(String isbn, long quantity, long borrowed, Book book) {
-        this.isbn = isbn;
-        this.quantity = quantity;
-        this.borrowed = borrowed;
-        this.book = book;
     }
 
     public long getId() {
