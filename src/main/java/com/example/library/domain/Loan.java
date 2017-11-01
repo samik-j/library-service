@@ -16,8 +16,7 @@ public class Loan {
     @JoinColumn(name = "edition_id") // DODAC NULLABLE FALSE I W BAZIE DANYCH ZMIENIC
     private Edition edition;
     private String dateLent;
-    private String dateToReturn;
-    private boolean isOverdue;
+    private LocalDate dateToReturn;
 
     Loan() {
     }
@@ -26,8 +25,7 @@ public class Loan {
         this.user = user;
         this.edition = edition;
         this.dateLent = LocalDate.now().toString();
-        this.dateToReturn = LocalDate.now().plusDays(14).toString();
-        this.isOverdue = false;
+        this.dateToReturn = LocalDate.now().plusDays(14);
     }
 
 
@@ -59,19 +57,16 @@ public class Loan {
         this.dateLent = dateLent;
     }
 
-    public String getDateToReturn() {
+    public LocalDate getDateToReturn() {
         return dateToReturn;
     }
 
-    public void setDateToReturn(String dateToReturn) {
+    public void setDateToReturn(LocalDate dateToReturn) {
         this.dateToReturn = dateToReturn;
     }
 
     public boolean isOverdue() {
-        return isOverdue;
+        return dateToReturn.isBefore(LocalDate.now());
     }
 
-    public void setOverdue(boolean overdue) {
-        isOverdue = overdue;
-    }
 }

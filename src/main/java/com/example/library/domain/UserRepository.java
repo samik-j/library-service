@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             ":lastName IS NULL OR user.lastName = :lastName")
     Set<User> findUsers(@Param("lastName") String lastName);
 
+
 }

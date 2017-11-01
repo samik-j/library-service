@@ -2,13 +2,15 @@ package com.example.library.web;
 
 import com.example.library.domain.Loan;
 
+import java.time.LocalDate;
+
 public class LoanResource {
 
     private long id;
     private long userId;
     private long editionId;
     private String dateLent;
-    private String dateToReturn;
+    private LocalDate dateToReturn;
     private boolean isOverdue;
 
     public LoanResource() {
@@ -21,7 +23,7 @@ public class LoanResource {
         this.dateLent = loan.getDateLent();
         this.dateToReturn = loan.getDateToReturn();
         this.isOverdue = loan.isOverdue();
-    }
+}
 
     public long getId() {
         return id;
@@ -55,11 +57,11 @@ public class LoanResource {
         this.dateLent = dateLent;
     }
 
-    public String getDateToReturn() {
+    public LocalDate getDateToReturn() {
         return dateToReturn;
     }
 
-    public void setDateToReturn(String dateToReturn) {
+    public void setDateToReturn(LocalDate dateToReturn) {
         this.dateToReturn = dateToReturn;
     }
 

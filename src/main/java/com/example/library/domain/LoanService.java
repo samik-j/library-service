@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class LoanService {
@@ -42,5 +44,13 @@ public class LoanService {
         }
 
         return false;
+    }
+
+    public Set<Loan> findOverdue() {
+        return loanRepository.findByDateToReturnBefore(LocalDate.now());
+    }
+
+    public Set<Loan> findOverdueSoon() {
+        return loanRepository.findByDateToReturnBefore(LocalDate.now().plusDays(5));
     }
 }
