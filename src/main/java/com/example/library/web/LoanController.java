@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/borrowed")
+@RequestMapping("/loans")
 public class LoanController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoanController.class);
@@ -25,7 +25,7 @@ public class LoanController {
 
     @RequestMapping( method = RequestMethod.POST)
     public boolean lend(@RequestBody LoanResource resource) {
-        LOGGER.info("Loan by userId: {}, editionId: {}", resource.getUserId(), resource.getEditionId());
+        LOGGER.info("Loan for userId: {}, editionId: {}", resource.getUserId(), resource.getEditionId());
 
         return service.registerLoan(resource);
     }
@@ -34,18 +34,18 @@ public class LoanController {
     public Set<LoanResource> getLoans() {
         LOGGER.info("Lent books");
 
-        return getBorrowedResources(service.findLoans());
+        return getLoanResources(service.findLoans());
     }
 
-    private LoanResource getBorrowedResource(Loan loan) {
+    private LoanResource getLoanResource(Loan loan) {
         return new LoanResource(loan);
     }
 
-    private Set<LoanResource> getBorrowedResources(List<Loan> loan) {
+    private Set<LoanResource> getLoanResources(List<Loan> loans) {
         Set<LoanResource> loanResources = new HashSet<>();
 
-        for(Loan loanOne : loan) {
-            loanResources.add(getBorrowedResource(loanOne));
+        for(Loan loan : loans) {
+            loanResources.add(getLoanResource(loan));
         }
 
         return loanResources;

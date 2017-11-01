@@ -4,7 +4,7 @@ import com.example.library.web.EditionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class EditionService {
@@ -28,13 +28,8 @@ public class EditionService {
         return savedEdition;
     }
 
-    public List<Edition> findEditions(String isbn) {
-        if(isbn != null) {
-            return editionRepository.findByIsbn(isbn);
-        }
-        else {
-            return editionRepository.findAll();
-        }
+    public Set<Edition> findEditions(long bookId, String isbn) {
+        return editionRepository.findEditions(bookId, isbn);
     }
 
 }

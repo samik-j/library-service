@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -50,7 +50,7 @@ public class UserController {
         return new UserResource(user);
     }
 
-    private Set<UserResource> getUserResources(List<User> users) {
+    private Set<UserResource> getUserResources(Collection<User> users) {
         Set<UserResource> userResources = new HashSet<>();
 
         for(User user : users) {

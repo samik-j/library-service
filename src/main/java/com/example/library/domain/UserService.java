@@ -4,7 +4,7 @@ import com.example.library.web.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -22,13 +22,8 @@ public class UserService {
         return repository.save(user);
     }
 
-    public List<User> findUsers(String lastName) {
-        if(lastName != null) {
-            return repository.findAllByLastName(lastName);
-        }
-        else {
-            return repository.findAll();
-        }
+    public Set<User> findUsers(String lastName) {
+        return repository.findUsers(lastName);
     }
 
     public User updateUser(long userId, UserResource resource) {

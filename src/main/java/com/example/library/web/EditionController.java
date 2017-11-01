@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,10 +25,10 @@ public class EditionController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Set<EditionResource> getEditions(@RequestParam(required = false) String editionIsbn) {//dodac bookId
-        LOGGER.info("Editions filtered: isbn: {}", editionIsbn);
+    public Set<EditionResource> getEditions(@PathVariable long bookId, @RequestParam(required = false) String isbn) {
+        LOGGER.info("Editions filtered: isbn: {}", isbn);
 
-        return getEditionResources(service.findEditions(editionIsbn));
+        return getEditionResources(service.findEditions(bookId, isbn));
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -43,7 +44,7 @@ public class EditionController {
         return new EditionResource(edition);
     }
 
-    private Set<EditionResource> getEditionResources(List<Edition> editions) {
+    private Set<EditionResource> getEditionResources(Collection<Edition> editions) {
         Set<EditionResource> editionResources = new HashSet<>();
 
         for(Edition edition : editions) {

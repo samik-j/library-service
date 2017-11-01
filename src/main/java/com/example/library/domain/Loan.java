@@ -10,10 +10,10 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id") // DODAC NULLABLE FALSE I W BAZIE DANYCH ZMIENIC
     private User user;
     @OneToOne
-    @JoinColumn(name = "edition_id")
+    @JoinColumn(name = "edition_id") // DODAC NULLABLE FALSE I W BAZIE DANYCH ZMIENIC
     private Edition edition;
     private String dateLent;
     private String dateToReturn;

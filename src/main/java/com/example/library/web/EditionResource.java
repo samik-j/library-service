@@ -6,7 +6,7 @@ public class EditionResource {
     private long id;
     private String isbn;
     private long quantity;
-    private long borrowed;
+    private long onLoan;
     private long bookId;
 
     public EditionResource() {
@@ -16,7 +16,7 @@ public class EditionResource {
         this.id = edition.getId();
         this.isbn = edition.getIsbn();
         this.quantity = edition.getQuantity();
-        this.borrowed = edition.getOnLoan();
+        this.onLoan = edition.getOnLoan();
         this.bookId = edition.getBook().getId();
     }
 
@@ -44,12 +44,12 @@ public class EditionResource {
         this.quantity = quantity;
     }
 
-    public long getBorrowed() {
-        return borrowed;
+    public long getOnLoan() {
+        return onLoan;
     }
 
-    public void setBorrowed(long borrowed) {
-        this.borrowed = borrowed;
+    public void setOnLoan(long onLoan) {
+        this.onLoan = onLoan;
     }
 
     public long getBookId() {

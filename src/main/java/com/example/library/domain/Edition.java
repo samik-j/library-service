@@ -8,6 +8,7 @@ public class Edition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(unique = true, nullable = false)
     private String isbn;
     private long quantity;
     private long onLoan;

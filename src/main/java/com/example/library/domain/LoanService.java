@@ -22,7 +22,6 @@ public class LoanService {
     }
 
     public List<Loan> findLoans() {
-        registerLoan(null);
         return loanRepository.findAll();
     }
 

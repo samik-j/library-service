@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -56,7 +56,7 @@ public class BookController {
         return new BookResource(book);
     }
 
-    private Set<BookResource> getBookResources(List<Book> books) {
+    private Set<BookResource> getBookResources(Collection<Book> books) {
         Set<BookResource> bookResources = new HashSet<>();
 
         for(Book book : books) {
