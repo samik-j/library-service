@@ -18,6 +18,7 @@ public class EditionService {
         this.bookRepository = bookRepository;
     }
 
+    //albo ma byc transactional albo usunac zmiany na book
     public Edition registerEdition(long bookId, EditionResource resource) {
         Book book = bookRepository.findOne(bookId);
         Edition edition = new Edition(resource.getIsbn(), resource.getQuantity(), book);

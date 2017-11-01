@@ -1,9 +1,5 @@
 package com.example.library.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +10,7 @@ public class Edition {
     private long id;
     private String isbn;
     private long quantity;
-    private long borrowed;
+    private long onLoan;
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
@@ -26,7 +22,7 @@ public class Edition {
         this.isbn = isbn;
         this.quantity = quantity;
         this.book = book;
-        this.borrowed = 0;
+        this.onLoan = 0;
     }
 
     public long getId() {
@@ -57,17 +53,17 @@ public class Edition {
         this.book= book_id;
     }
 
-    public long getBorrowed() {
-        return borrowed;
+    public long getOnLoan() {
+        return onLoan;
     }
 
-    public void setBorrowed(long borrowed) {
-        this.borrowed = borrowed;
+    public void setOnLoan(long onLoan) {
+        this.onLoan = onLoan;
     }
 
-    boolean borrow() {
-        if(quantity > borrowed) {
-            ++borrowed;
+    boolean lend() {
+        if(quantity > onLoan) {
+            ++onLoan;
             return true;
         }
         return false;

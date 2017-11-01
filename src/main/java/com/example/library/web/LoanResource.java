@@ -1,26 +1,26 @@
 package com.example.library.web;
 
-import com.example.library.domain.Borrowed;
+import com.example.library.domain.Loan;
 
-public class BorrowedResource {
+public class LoanResource {
 
     private long id;
     private long userId;
     private long editionId;
-    private String dateBorrowed;
+    private String dateLent;
     private String dateToReturn;
     private boolean isOverdue;
 
-    public BorrowedResource() {
+    public LoanResource() {
     }
 
-    public BorrowedResource(Borrowed borrowed) {
-        this.id = borrowed.getId();
-        this.userId = borrowed.getUser().getId();
-        this.editionId = borrowed.getEdition().getId();
-        this.dateBorrowed = borrowed.getDateBorrowed();
-        this.dateToReturn = borrowed.getDateToReturn();
-        this.isOverdue = borrowed.isOverdue();
+    public LoanResource(Loan loan) {
+        this.id = loan.getId();
+        this.userId = loan.getUser().getId();
+        this.editionId = loan.getEdition().getId();
+        this.dateLent = loan.getDateLent();
+        this.dateToReturn = loan.getDateToReturn();
+        this.isOverdue = loan.isOverdue();
     }
 
     public long getId() {
@@ -47,12 +47,12 @@ public class BorrowedResource {
         this.editionId = editionId;
     }
 
-    public String getDateBorrowed() {
-        return dateBorrowed;
+    public String getDateLent() {
+        return dateLent;
     }
 
-    public void setDateBorrowed(String dateBorrowed) {
-        this.dateBorrowed = dateBorrowed;
+    public void setDateLent(String dateLent) {
+        this.dateLent = dateLent;
     }
 
     public String getDateToReturn() {

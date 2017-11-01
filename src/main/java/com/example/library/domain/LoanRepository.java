@@ -2,5 +2,5 @@ package com.example.library.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BorrowedRepository extends JpaRepository<Borrowed, Long> {
+public interface LoanRepository extends JpaRepository<Loan, Long> {
 }

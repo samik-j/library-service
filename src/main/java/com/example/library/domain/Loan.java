@@ -1,13 +1,10 @@
 package com.example.library.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class Borrowed {
+public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,17 +15,17 @@ public class Borrowed {
     @OneToOne
     @JoinColumn(name = "edition_id")
     private Edition edition;
-    private String dateBorrowed;
+    private String dateLent;
     private String dateToReturn;
     private boolean isOverdue;
 
-    Borrowed() {
+    Loan() {
     }
 
-    Borrowed(User user, Edition edition) {
+    Loan(User user, Edition edition) {
         this.user = user;
         this.edition = edition;
-        this.dateBorrowed = LocalDate.now().toString();
+        this.dateLent = LocalDate.now().toString();
         this.dateToReturn = LocalDate.now().plusDays(14).toString();
         this.isOverdue = false;
     }
@@ -54,12 +51,12 @@ public class Borrowed {
         this.edition = edition;
     }
 
-    public String getDateBorrowed() {
-        return dateBorrowed;
+    public String getDateLent() {
+        return dateLent;
     }
 
-    public void setDateBorrowed(String dateBorrowed) {
-        this.dateBorrowed = dateBorrowed;
+    public void setDateLent(String dateLent) {
+        this.dateLent = dateLent;
     }
 
     public String getDateToReturn() {

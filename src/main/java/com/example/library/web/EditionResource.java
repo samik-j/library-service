@@ -16,7 +16,7 @@ public class EditionResource {
         this.id = edition.getId();
         this.isbn = edition.getIsbn();
         this.quantity = edition.getQuantity();
-        this.borrowed = edition.getBorrowed();
+        this.borrowed = edition.getOnLoan();
         this.bookId = edition.getBook().getId();
     }
 

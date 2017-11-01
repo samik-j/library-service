@@ -40,7 +40,6 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    //@RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
     public UserResource updateUser(@PathVariable long userId, @RequestBody UserResource resource) {
         User user = service.updateUser(userId, resource);
 
