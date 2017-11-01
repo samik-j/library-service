@@ -2,12 +2,14 @@ package com.example.library.web;
 
 import com.example.library.domain.User;
 
+import java.time.LocalDate;
+
 public class UserResource {
 
     private long id;
     private String firstName;
     private String lastName;
-    private String dateJoined;
+    private LocalDate dateJoined;
 
     public UserResource() {
     }
@@ -43,11 +45,11 @@ public class UserResource {
         this.lastName = lastName;
     }
 
-    public String getDateJoined() {
+    public LocalDate getDateJoined() {
         return dateJoined;
     }
 
-    public void setDateJoined(String dateJoined) {
+    public void setDateJoined(LocalDate dateJoined) {
         this.dateJoined = dateJoined;
     }
 }

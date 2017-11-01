@@ -1,9 +1,9 @@
 package com.example.library.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
@@ -14,7 +14,7 @@ public class User {
     private long id;
     private String firstName;
     private String lastName;
-    private String dateJoined;
+    private LocalDate dateJoined;
 
     User() {
     }
@@ -22,7 +22,7 @@ public class User {
     User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.dateJoined = LocalDate.now().toString();
+        this.dateJoined = LocalDate.now();
     }
 
     public long getId() {
@@ -45,11 +45,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getDateJoined() {
+    public LocalDate getDateJoined() {
         return dateJoined;
     }
 
-    public void setDateJoined(String dateJoined) {
+    public void setDateJoined(LocalDate dateJoined) {
         this.dateJoined = dateJoined;
     }
 
