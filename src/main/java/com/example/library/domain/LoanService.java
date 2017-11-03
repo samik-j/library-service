@@ -1,5 +1,6 @@
 package com.example.library.domain;
 
+import com.example.library.web.LoanOverdue;
 import com.example.library.web.LoanResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,17 +47,18 @@ public class LoanService {
         return false;
     }
 
-    public List<Loan> findLoans(String overdue) {
-        if(overdue == null) {
-            return loanRepository.findAll();
-        }
-        else if(overdue.equals("now")) {
+    public List<Loan> findLoans(LoanOverdue overdue) {
+        if(overdue == LoanOverdue.NOW) {
             return loanRepository.findByDateToReturnBefore(LocalDate.now());
         }
-        else if(overdue.equals("soon")) {
+        else if(overdue == LoanOverdue.SOON){
             return loanRepository.findByDateToReturnBefore(LocalDate.now().plusDays(5));
         }
-        return new ArrayList<>();
+        throw new UnsupportedLoanOverdueException();
+    }
+
+    private class UnsupportedLoanOverdueException extends RuntimeException {
+
     }
 
 }

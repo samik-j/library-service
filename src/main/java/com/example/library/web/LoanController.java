@@ -7,9 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/loans")
@@ -30,19 +29,26 @@ public class LoanController {
         return service.registerLoan(resource);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public Set<LoanResource> getLoans(@RequestParam(required = false) String overdue) {
+    @RequestMapping(method = RequestMethod.GET, params = {"overdue"})
+    public List<LoanResource> getLoans(@RequestParam LoanOverdue overdue) {
         LOGGER.info("Lent books overdue: {}", overdue);
 
         return getLoanResources(service.findLoans(overdue));
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<LoanResource> getLoans() {
+        LOGGER.info("Lent books");
+
+        return getLoanResources(service.findLoans());
     }
 
     private LoanResource getLoanResource(Loan loan) {
         return new LoanResource(loan);
     }
 
-    private Set<LoanResource> getLoanResources(List<Loan> loans) {
-        Set<LoanResource> loanResources = new HashSet<>();
+    private List<LoanResource> getLoanResources(List<Loan> loans) {
+        List<LoanResource> loanResources = new ArrayList<>();
 
         for(Loan loan : loans) {
             loanResources.add(getLoanResource(loan));

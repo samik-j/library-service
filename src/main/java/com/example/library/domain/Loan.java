@@ -18,14 +18,14 @@ public class Loan {
     private LocalDate dateLent;
     private LocalDate dateToReturn;
 
-    Loan() {
+    private Loan() {
     }
 
     Loan(User user, Edition edition) {
         this.user = user;
         this.edition = edition;
         this.dateLent = LocalDate.now();
-        this.dateToReturn = LocalDate.now().plusDays(14);
+        this.dateToReturn = dateLent.plusDays(14);
     }
 
 
@@ -37,32 +37,16 @@ public class Loan {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Edition getEdition() {
         return edition;
-    }
-
-    public void setEdition(Edition edition) {
-        this.edition = edition;
     }
 
     public LocalDate getDateLent() {
         return dateLent;
     }
 
-    public void setDateLent(LocalDate dateLent) {
-        this.dateLent = dateLent;
-    }
-
     public LocalDate getDateToReturn() {
         return dateToReturn;
-    }
-
-    public void setDateToReturn(LocalDate dateToReturn) {
-        this.dateToReturn = dateToReturn;
     }
 
     public boolean isOverdue() {
