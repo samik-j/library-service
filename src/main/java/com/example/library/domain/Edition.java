@@ -1,6 +1,8 @@
 package com.example.library.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Year;
 
 @Entity
 public class Edition {
@@ -10,7 +12,7 @@ public class Edition {
     private long id;
     @Column(unique = true, nullable = false)
     private String isbn;
-    private 
+    private Year publicationYear;
     private long quantity;
     private long onLoan;
     @ManyToOne
@@ -20,8 +22,9 @@ public class Edition {
     Edition() {
     }
 
-    Edition(String isbn, long quantity, Book book) {
+    Edition(String isbn, Year publicationYear, long quantity, Book book) {
         this.isbn = isbn;
+        this.publicationYear = publicationYear;
         this.quantity = quantity;
         this.book = book;
         this.onLoan = 0;
@@ -37,6 +40,14 @@ public class Edition {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public Year getPublicationYear() {
+        return publicationYear;
+    }
+
+    public void setPublicationYear(Year publicationYear) {
+        this.publicationYear = publicationYear;
     }
 
     public long getQuantity() {

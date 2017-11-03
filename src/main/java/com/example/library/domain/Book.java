@@ -3,6 +3,7 @@ package com.example.library.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.time.Year;
 import java.util.Set;
 
 @Entity
@@ -14,6 +15,7 @@ public class Book {
     @Column(nullable = false)
     private String title;
     private String author;
+    private Year publicationYear;
     @OneToMany(fetch = FetchType.LAZY)
     // lazy wczyta mi edycje dopiero jak bede ich uzywac albo moze byc EAGER to wtedy jak wczytuje Book to odrazu wczyta z calym setem Editin
     private Set<Edition> editions;
@@ -21,9 +23,10 @@ public class Book {
     Book() {
     }
 
-    Book(String title, String author) {
+    Book(String title, String author, Year publicationYear) {
         this.title = title;
         this.author = author;
+        this.publicationYear = publicationYear;
     }
 
     public long getId() {
@@ -48,6 +51,14 @@ public class Book {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public Year getPublicationYear() {
+        return publicationYear;
+    }
+
+    public void setPublicationYear(Year publicationYear) {
+        this.publicationYear = publicationYear;
     }
 
     public void setEditions(Set<Edition> editions) {

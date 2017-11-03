@@ -21,7 +21,7 @@ public class EditionService {
     //albo ma byc transactional albo usunac zmiany na book
     public Edition registerEdition(long bookId, EditionResource resource) {
         Book book = bookRepository.findOne(bookId);
-        Edition edition = new Edition(resource.getIsbn(), resource.getQuantity(), book);
+        Edition edition = new Edition(resource.getIsbn(), resource.getPublicationYear(), resource.getQuantity(), book);
         book.addEdition(edition);
         Edition savedEdition = editionRepository.save(edition);
         bookRepository.save(book);

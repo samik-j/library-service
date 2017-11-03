@@ -2,9 +2,13 @@ package com.example.library.web;
 
 import com.example.library.domain.Edition;
 
+import java.time.LocalDate;
+import java.time.Year;
+
 public class EditionResource {
     private long id;
     private String isbn;
+    private Year publicationYear;
     private long quantity;
     private long onLoan;
     private long bookId;
@@ -15,6 +19,7 @@ public class EditionResource {
     EditionResource(Edition edition) {
         this.id = edition.getId();
         this.isbn = edition.getIsbn();
+        this.publicationYear = edition.getPublicationYear();
         this.quantity = edition.getQuantity();
         this.onLoan = edition.getOnLoan();
         this.bookId = edition.getBook().getId();
@@ -34,6 +39,14 @@ public class EditionResource {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public Year getPublicationYear() {
+        return publicationYear;
+    }
+
+    public void setPublicationYear(Year publicationYear) {
+        this.publicationYear = publicationYear;
     }
 
     public long getQuantity() {

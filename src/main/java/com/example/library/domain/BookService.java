@@ -17,7 +17,7 @@ public class BookService {
     }
 
     public Book registerBook(BookResource resource) {
-        Book book = new Book(resource.getTitle(), resource.getAuthor());
+        Book book = new Book(resource.getTitle(), resource.getAuthor(), resource.getPublicationYear());
 
         return repository.save(book);
     }
