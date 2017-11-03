@@ -1,5 +1,7 @@
 package com.example.library.web;
 
+import com.example.library.domain.Book;
+import com.example.library.domain.BookService;
 import com.example.library.domain.Edition;
 import com.example.library.domain.EditionService;
 import org.slf4j.Logger;
@@ -15,15 +17,18 @@ public class EditionController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EditionController.class);
     private EditionService service;
+    private BookService bookService;
 
     @Autowired
-    public EditionController(EditionService service) {
+    public EditionController(EditionService service, BookService bookService) {
         this.service = service;
+        this.bookService = bookService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<EditionResource> getEditions(@PathVariable long bookId, @RequestParam(required = false) String isbn) {
         LOGGER.info("Editions filtered: isbn: {}", isbn);
+        validateBookExistence(bookId);
 
         return getEditionResources(service.findEditions(bookId, isbn));
     }
@@ -32,6 +37,8 @@ public class EditionController {
     public EditionResource addEdition(@PathVariable long bookId, @RequestBody EditionResource resource) {
         LOGGER.info("Book id: {}, Edition added: isbn: {}, quantity: {}",
                 bookId, resource.getIsbn(), resource.getQuantity());
+        validateBookExistence(bookId);
+
         Edition edition = service.registerEdition(bookId, resource);
 
         return getEditionResource(edition);
@@ -49,6 +56,14 @@ public class EditionController {
         }
 
         return editionResources;
+    }
+
+    private void validateBookExistence(@PathVariable long bookId) {
+        Book book = bookService.findBookById(bookId);
+
+        if(book == null) {
+            throw new ResourceNotFoundException();
+        }
     }
 
 }
