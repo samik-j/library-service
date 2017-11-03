@@ -1,9 +1,10 @@
-package com.example.library.web;
+package com.example.library.web.edition;
 
-import com.example.library.domain.Book;
-import com.example.library.domain.BookService;
-import com.example.library.domain.Edition;
-import com.example.library.domain.EditionService;
+import com.example.library.domain.book.Book;
+import com.example.library.domain.book.BookService;
+import com.example.library.domain.edition.Edition;
+import com.example.library.domain.edition.EditionService;
+import com.example.library.web.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

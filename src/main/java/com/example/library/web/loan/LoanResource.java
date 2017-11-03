@@ -1,6 +1,6 @@
-package com.example.library.web;
+package com.example.library.web.loan;
 
-import com.example.library.domain.Loan;
+import com.example.library.domain.loan.Loan;
 
 import java.time.LocalDate;
 

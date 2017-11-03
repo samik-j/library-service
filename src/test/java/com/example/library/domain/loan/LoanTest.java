@@ -1,8 +1,12 @@
-package com.example.library.domain;
+package com.example.library.domain.loan;
 
+import com.example.library.domain.book.Book;
+import com.example.library.domain.edition.Edition;
+import com.example.library.domain.user.User;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.Year;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -13,8 +17,9 @@ public class LoanTest {
     @Test
     public void shouldCreateLoan() {
         // given
-        User user = new User();
-        Edition edition = new Edition();
+        Book book = new Book("title", "author", Year.parse("2000"));
+        User user = new User("Filip", "Karas");
+        Edition edition = new Edition("12342", Year.parse("2000"), 5, book);
 
         // when
         Loan loan = new Loan(user, edition);
@@ -29,8 +34,9 @@ public class LoanTest {
     @Test
     public void shouldNotBeOverdueAfterCreation() {
         // given
-        User user = new User();
-        Edition edition = new Edition();
+        Book book = new Book("title", "author", Year.parse("2000"));
+        User user = new User("Filip", "Karas");
+        Edition edition = new Edition("12342", Year.parse("2000"), 5, book);
 
         // when
         Loan loan = new Loan(user, edition);

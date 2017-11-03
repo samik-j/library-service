@@ -1,7 +1,8 @@
-package com.example.library.domain;
+package com.example.library.domain.edition;
+
+import com.example.library.domain.book.Book;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.Year;
 
 @Entity
@@ -22,7 +23,7 @@ public class Edition {
     Edition() {
     }
 
-    Edition(String isbn, Year publicationYear, long quantity, Book book) {
+    public Edition(String isbn, Year publicationYear, long quantity, Book book) {
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.quantity = quantity;
@@ -74,7 +75,7 @@ public class Edition {
         this.onLoan = onLoan;
     }
 
-    boolean lend() {
+    public boolean lend() {
         if(quantity > onLoan) {
             ++onLoan;
             return true;

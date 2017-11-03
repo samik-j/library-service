@@ -1,4 +1,7 @@
-package com.example.library.domain;
+package com.example.library.domain.loan;
+
+import com.example.library.domain.user.User;
+import com.example.library.domain.edition.Edition;
 
 import javax.persistence.*;
 import java.time.LocalDate;

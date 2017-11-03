@@ -1,6 +1,6 @@
-package com.example.library.domain;
+package com.example.library.domain.user;
 
-import com.example.library.web.UserResource;
+import com.example.library.web.user.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

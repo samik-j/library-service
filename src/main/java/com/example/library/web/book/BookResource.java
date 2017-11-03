@@ -1,6 +1,6 @@
-package com.example.library.web;
+package com.example.library.web.book;
 
-import com.example.library.domain.Book;
+import com.example.library.domain.book.Book;
 
 import java.time.Year;
 

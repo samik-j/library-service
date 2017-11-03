@@ -1,6 +1,6 @@
-package com.example.library.web;
+package com.example.library.web.user;
 
-import com.example.library.domain.User;
+import com.example.library.domain.user.User;
 
 import java.time.LocalDate;
 

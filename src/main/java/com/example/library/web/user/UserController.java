@@ -1,7 +1,8 @@
-package com.example.library.web;
+package com.example.library.web.user;
 
-import com.example.library.domain.User;
-import com.example.library.domain.UserService;
+import com.example.library.domain.user.User;
+import com.example.library.domain.user.UserService;
+import com.example.library.web.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

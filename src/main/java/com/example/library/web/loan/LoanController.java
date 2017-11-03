@@ -1,7 +1,7 @@
-package com.example.library.web;
+package com.example.library.web.loan;
 
-import com.example.library.domain.Loan;
-import com.example.library.domain.LoanService;
+import com.example.library.domain.loan.Loan;
+import com.example.library.domain.loan.LoanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

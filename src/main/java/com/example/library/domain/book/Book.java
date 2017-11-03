@@ -1,6 +1,6 @@
-package com.example.library.domain;
+package com.example.library.domain.book;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.library.domain.edition.Edition;
 
 import javax.persistence.*;
 import java.time.Year;
@@ -23,7 +23,7 @@ public class Book {
     Book() {
     }
 
-    Book(String title, String author, Year publicationYear) {
+    public Book(String title, String author, Year publicationYear) {
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
@@ -79,7 +79,7 @@ public class Book {
         this.author = author;
     }
 
-    void addEdition(Edition edition) {
+    public void addEdition(Edition edition) {
         editions.add(edition);
     }
 

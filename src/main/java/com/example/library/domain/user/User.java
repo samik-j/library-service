@@ -1,4 +1,4 @@
-package com.example.library.domain;
+package com.example.library.domain.user;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +19,7 @@ public class User {
     User() {
     }
 
-    User(String firstName, String lastName) {
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateJoined = LocalDate.now();

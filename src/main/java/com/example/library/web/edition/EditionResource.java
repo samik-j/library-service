@@ -1,8 +1,7 @@
-package com.example.library.web;
+package com.example.library.web.edition;
 
-import com.example.library.domain.Edition;
+import com.example.library.domain.edition.Edition;
 
-import java.time.LocalDate;
 import java.time.Year;
 
 public class EditionResource {

@@ -1,13 +1,15 @@
-package com.example.library.domain;
+package com.example.library.domain.loan;
 
-import com.example.library.web.LoanOverdue;
-import com.example.library.web.LoanResource;
+import com.example.library.domain.user.UserRepository;
+import com.example.library.domain.edition.Edition;
+import com.example.library.domain.edition.EditionRepository;
+import com.example.library.web.loan.LoanOverdue;
+import com.example.library.web.loan.LoanResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -1,6 +1,8 @@
-package com.example.library.domain;
+package com.example.library.domain.edition;
 
-import com.example.library.web.EditionResource;
+import com.example.library.domain.book.Book;
+import com.example.library.domain.book.BookRepository;
+import com.example.library.web.edition.EditionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
