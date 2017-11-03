@@ -33,20 +33,14 @@ public class LoanService {
     @Transactional //robi transakcje czyli albo zrobi wszystko albo nic(wtedy jak poleci wyjatek)
     //przy Transactional metoda musi byc public
     //jezeli w tej klasie zawolam ta metode to nie bedzie tu transakcyjna
-    public boolean registerLoan(LoanResource resource) {
+    public Loan registerLoan(LoanResource resource) {
         Edition edition = editionRepository.findOne(resource.getEditionId());
-        boolean canLend = edition.lend();
+        edition.lend();
         editionRepository.save(edition);
 
-        if(canLend) {
-            Loan loan = new Loan(userRepository.findOne(resource.getUserId()), editionRepository.findOne(resource.getEditionId()));
+        Loan loan = new Loan(userRepository.findOne(resource.getUserId()), editionRepository.findOne(resource.getEditionId()));
 
-            loanRepository.save(loan);
-
-            return true;
-        }
-
-        return false;
+        return loanRepository.save(loan);
     }
 
     public List<Loan> findLoans(LoanOverdue overdue) {

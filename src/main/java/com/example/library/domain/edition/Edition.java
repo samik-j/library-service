@@ -75,11 +75,16 @@ public class Edition {
         this.onLoan = onLoan;
     }
 
-    public boolean lend() {
-        if(quantity > onLoan) {
+    public void lend() {
+        if(canBeLend()) {
             ++onLoan;
-            return true;
         }
-        return false;
+        else {
+            throw new InsufficientEditionQuantityException(this.id);
+        }
+    }
+
+    public boolean canBeLend() {
+        return quantity > onLoan;
     }
 }

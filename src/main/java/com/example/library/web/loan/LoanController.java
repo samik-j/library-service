@@ -2,9 +2,12 @@ package com.example.library.web.loan;
 
 import com.example.library.domain.loan.Loan;
 import com.example.library.domain.loan.LoanService;
+import com.example.library.web.ErrorsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,17 +19,28 @@ public class LoanController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoanController.class);
     private LoanService service;
+    private LoanCreationValidator validator;
 
     @Autowired
-    public LoanController(LoanService service) {
+    public LoanController(LoanService service, LoanCreationValidator validator) {
         this.service = service;
+        this.validator = validator;
     }
 
     @RequestMapping( method = RequestMethod.POST)
-    public boolean lend(@RequestBody LoanResource resource) {
+    public ResponseEntity<Object> lend(@RequestBody LoanResource resource) {
         LOGGER.info("Loan for userId: {}, editionId: {}", resource.getUserId(), resource.getEditionId());
 
-        return service.registerLoan(resource);
+        ErrorsResource errorsResource = validator.validate(resource);
+
+        if(errorsResource.getValidationErrors().isEmpty()) {
+            Loan loan = service.registerLoan(resource);
+
+            return new ResponseEntity<Object>(getLoanResource(loan), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, params = {"overdue"})

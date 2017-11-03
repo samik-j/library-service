@@ -50,6 +50,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> addBook(@RequestBody BookResource resource) {
         LOGGER.info("Book added: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
+
         ErrorsResource errorsResource = validator.validate(resource);
 
         if(errorsResource.getValidationErrors().isEmpty()) {

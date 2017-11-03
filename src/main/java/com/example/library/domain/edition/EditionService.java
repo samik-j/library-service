@@ -34,4 +34,12 @@ public class EditionService {
         return editionRepository.findEditions(bookId, isbn);
     }
 
+    public boolean editionExists(long id) {
+        return editionRepository.exists(id);
+    }
+
+    public boolean canBeLend(long id) {
+        return editionRepository.findOne(id).canBeLend();
+    }
+
 }

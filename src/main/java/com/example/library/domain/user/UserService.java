@@ -36,4 +36,8 @@ public class UserService {
     public User findUser(long userId) {
         return repository.findOne(userId);
     }
+
+    public boolean userExists(long userId) {
+        return repository.exists(userId);
+    }
 }
