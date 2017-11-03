@@ -10,6 +10,7 @@ public class Edition {
     private long id;
     @Column(unique = true, nullable = false)
     private String isbn;
+    private 
     private long quantity;
     private long onLoan;
     @ManyToOne

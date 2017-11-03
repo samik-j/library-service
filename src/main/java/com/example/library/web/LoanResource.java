@@ -9,7 +9,7 @@ public class LoanResource {
     private long id;
     private long userId;
     private long editionId;
-    private String dateLent;
+    private LocalDate dateLent;
     private LocalDate dateToReturn;
     private boolean isOverdue;
 
@@ -49,11 +49,11 @@ public class LoanResource {
         this.editionId = editionId;
     }
 
-    public String getDateLent() {
+    public LocalDate getDateLent() {
         return dateLent;
     }
 
-    public void setDateLent(String dateLent) {
+    public void setDateLent(LocalDate dateLent) {
         this.dateLent = dateLent;
     }
 

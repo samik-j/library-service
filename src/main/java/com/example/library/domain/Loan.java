@@ -10,12 +10,12 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToOne
-    @JoinColumn(name = "user_id") // DODAC NULLABLE FALSE I W BAZIE DANYCH ZMIENIC
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @OneToOne
-    @JoinColumn(name = "edition_id") // DODAC NULLABLE FALSE I W BAZIE DANYCH ZMIENIC
+    @JoinColumn(name = "edition_id", nullable = false)
     private Edition edition;
-    private String dateLent;
+    private LocalDate dateLent;
     private LocalDate dateToReturn;
 
     Loan() {
@@ -24,7 +24,7 @@ public class Loan {
     Loan(User user, Edition edition) {
         this.user = user;
         this.edition = edition;
-        this.dateLent = LocalDate.now().toString();
+        this.dateLent = LocalDate.now();
         this.dateToReturn = LocalDate.now().plusDays(14);
     }
 
@@ -49,11 +49,11 @@ public class Loan {
         this.edition = edition;
     }
 
-    public String getDateLent() {
+    public LocalDate getDateLent() {
         return dateLent;
     }
 
-    public void setDateLent(String dateLent) {
+    public void setDateLent(LocalDate dateLent) {
         this.dateLent = dateLent;
     }
 
