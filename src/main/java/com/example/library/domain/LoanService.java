@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class LoanService {
@@ -46,11 +46,17 @@ public class LoanService {
         return false;
     }
 
-    public Set<Loan> findOverdue() {
-        return loanRepository.findByDateToReturnBefore(LocalDate.now());
+    public List<Loan> findLoans(String overdue) {
+        if(overdue == null) {
+            return loanRepository.findAll();
+        }
+        else if(overdue.equals("now")) {
+            return loanRepository.findByDateToReturnBefore(LocalDate.now());
+        }
+        else if(overdue.equals("soon")) {
+            return loanRepository.findByDateToReturnBefore(LocalDate.now().plusDays(5));
+        }
+        return new ArrayList<>();
     }
 
-    public Set<Loan> findOverdueSoon() {
-        return loanRepository.findByDateToReturnBefore(LocalDate.now().plusDays(5));
-    }
 }

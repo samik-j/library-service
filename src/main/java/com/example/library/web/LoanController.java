@@ -31,10 +31,10 @@ public class LoanController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Set<LoanResource> getLoans() {
-        LOGGER.info("Lent books");
+    public Set<LoanResource> getLoans(@RequestParam(required = false) String overdue) {
+        LOGGER.info("Lent books overdue: {}", overdue);
 
-        return getLoanResources(service.findLoans());
+        return getLoanResources(service.findLoans(overdue));
     }
 
     private LoanResource getLoanResource(Loan loan) {
