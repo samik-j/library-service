@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -24,7 +22,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Set<UserResource> getUsers(@RequestParam(required = false) String lastName) {
+    public List<UserResource> getUsers(@RequestParam(required = false) String lastName) {
         LOGGER.info("Users filtered: lastName: {}", lastName);
 
         return getUserResources(service.findUsers(lastName));
@@ -50,8 +48,8 @@ public class UserController {
         return new UserResource(user);
     }
 
-    private Set<UserResource> getUserResources(Collection<User> users) {
-        Set<UserResource> userResources = new HashSet<>();
+    private List<UserResource> getUserResources(Collection<User> users) {
+        List<UserResource> userResources = new ArrayList<>();
 
         for(User user : users) {
             userResources.add(new UserResource(user));

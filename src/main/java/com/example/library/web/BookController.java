@@ -7,8 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -24,7 +25,7 @@ public class BookController {
     }
 
     @RequestMapping
-    public Set<BookResource> getBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
+    public List<BookResource> getBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String author) {
         LOGGER.info("Books filtered by: title: {}, author: {}", title, author);
 
         return getBookResources(service.findBooks(title, author));
@@ -56,8 +57,8 @@ public class BookController {
         return new BookResource(book);
     }
 
-    private Set<BookResource> getBookResources(Collection<Book> books) {
-        Set<BookResource> bookResources = new HashSet<>();
+    private List<BookResource> getBookResources(Collection<Book> books) {
+        List<BookResource> bookResources = new ArrayList<>();
 
         for(Book book : books) {
             bookResources.add(getBookResource(book));

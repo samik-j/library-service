@@ -5,13 +5,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Set;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT user FROM User user WHERE " +
-            ":lastName IS NULL OR user.lastName = :lastName")
-    Set<User> findUsers(@Param("lastName") String lastName);
+            ":lastName IS NULL OR user.lastName = :lastName " +
+            "ORDER BY user.lastName, user.firstName")
+    List<User> findUsers(@Param("lastName") String lastName);
 
 
 }

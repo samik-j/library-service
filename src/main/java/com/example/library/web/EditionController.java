@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/books/{bookId}/editions")
@@ -25,7 +22,7 @@ public class EditionController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Set<EditionResource> getEditions(@PathVariable long bookId, @RequestParam(required = false) String isbn) {
+    public List<EditionResource> getEditions(@PathVariable long bookId, @RequestParam(required = false) String isbn) {
         LOGGER.info("Editions filtered: isbn: {}", isbn);
 
         return getEditionResources(service.findEditions(bookId, isbn));
@@ -44,8 +41,8 @@ public class EditionController {
         return new EditionResource(edition);
     }
 
-    private Set<EditionResource> getEditionResources(Collection<Edition> editions) {
-        Set<EditionResource> editionResources = new HashSet<>();
+    private List<EditionResource> getEditionResources(Collection<Edition> editions) {
+        List<EditionResource> editionResources = new ArrayList<>();
 
         for(Edition edition : editions) {
             editionResources.add(getEditionResource(edition));
