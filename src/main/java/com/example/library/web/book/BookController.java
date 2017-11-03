@@ -2,6 +2,7 @@ package com.example.library.web.book;
 
 import com.example.library.domain.book.Book;
 import com.example.library.domain.book.BookService;
+import com.example.library.web.ErrorsResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,12 @@ public class BookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private BookService service;
+    private BookCreationValidator validator;
 
     @Autowired //wstrzykuje zaleznosc bean ktory jest zadeklarowany
-    public BookController(BookService service) {
+    public BookController(BookService service, BookCreationValidator validator) {
         this.service = service;
+        this.validator = validator;
     }
 
     @RequestMapping
@@ -33,7 +36,7 @@ public class BookController {
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
-    public ResponseEntity getBook(@PathVariable long bookId) {
+    public ResponseEntity<Object> getBook(@PathVariable long bookId) {
         Book book = service.findBookById(bookId);
 
         if(book != null) {
@@ -45,11 +48,18 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public BookResource addBook(@RequestBody BookResource resource) {
+    public ResponseEntity<Object> addBook(@RequestBody BookResource resource) {
         LOGGER.info("Book added: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
-        Book book = service.registerBook(resource);
+        ErrorsResource errorsResource = validator.validate(resource);
 
-        return getBookResource(book);
+        if(errorsResource.getValidationErrors().isEmpty()) {
+            Book book = service.registerBook(resource);
+
+            return new ResponseEntity(getBookResource(book), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(errorsResource, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.PUT)
