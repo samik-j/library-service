@@ -5,6 +5,9 @@ import com.example.library.domain.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,10 +35,15 @@ public class BookController {
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
-    public BookResource getBook(@PathVariable long bookId) {
+    public ResponseEntity getBook(@PathVariable long bookId) {
         Book book = service.findBookById(bookId);
 
-        return getBookResource(book);
+        if(book != null) {
+            return new ResponseEntity(getBookResource(book), HttpStatus.OK);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST)
