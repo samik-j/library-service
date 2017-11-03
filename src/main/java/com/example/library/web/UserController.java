@@ -28,6 +28,19 @@ public class UserController {
         return getUserResources(service.findUsers(lastName));
     }
 
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    public UserResource getUser(@PathVariable long userId) {
+        User user = service.findUser(userId);
+
+        if(user != null) {
+            return getUserResource(user);
+        }
+        else {
+            throw new ResourceNotFoundException();
+        }
+
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public UserResource addUser(@RequestBody UserResource resource) {
         LOGGER.info("User added: firstName:{}, laseName:{}",
