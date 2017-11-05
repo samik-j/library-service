@@ -12,6 +12,7 @@ public class Edition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(unique = true, nullable = false)
+    //length zeby bylo?
     private String isbn;
     private Year publicationYear;
     private long quantity;

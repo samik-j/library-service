@@ -15,6 +15,9 @@ public class EditionCreationValidator {
         if(resource.getIsbn() == null || resource.getIsbn().isEmpty()) {
             validationErrors.add("Isbn not specified");
         }
+        if(resource.getIsbn().length() != 8 || resource.getIsbn().length() != 13) {
+            validationErrors.add("Wrong isbn format");
+        }
         if(resource.getPublicationYear() == null) {
             validationErrors.add("Publication year not specified");
         }
