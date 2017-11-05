@@ -84,7 +84,7 @@ public class Edition {
         }
     }
 
-    public boolean canBeLend() {
+    boolean canBeLend() {
         return quantity > onLoan;
     }
 }

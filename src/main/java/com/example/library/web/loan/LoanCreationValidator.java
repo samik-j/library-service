@@ -31,6 +31,7 @@ public class LoanCreationValidator {
         else if(!validateLoan(resource.getEditionId())) {
             validationErrors.add("Not possible to loan because of insufficient quantity available");
         }
+        
         return new ErrorsResource(validationErrors);
     }
 
