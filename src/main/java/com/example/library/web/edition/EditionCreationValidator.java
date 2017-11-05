@@ -1,5 +1,6 @@
 package com.example.library.web.edition;
 
+import com.example.library.domain.edition.EditionService;
 import com.example.library.web.ErrorsResource;
 import org.springframework.stereotype.Component;
 
@@ -9,11 +10,20 @@ import java.util.List;
 @Component
 public class EditionCreationValidator {
 
+    private EditionService service;
+    //Autowired?
+    public EditionCreationValidator(EditionService service) {
+        this.service = service;
+    }
+
     ErrorsResource validate(EditionResource resource) {
         List<String> validationErrors = new ArrayList<>();
 
         if(resource.getIsbn() == null || resource.getIsbn().isEmpty()) {
             validationErrors.add("Isbn not specified");
+        }
+        if(resource.getIsbn() != null && !validateUniqueIsbn(resource.getIsbn())) {
+            validationErrors.add("Isbn already exists");
         }
         if(resource.getIsbn().length() != 8 && resource.getIsbn().length() != 13) {
             validationErrors.add("Wrong isbn format");
@@ -21,13 +31,14 @@ public class EditionCreationValidator {
         if(resource.getPublicationYear() == null) {
             validationErrors.add("Publication year not specified");
         }
-        if(resource.getQuantity() == null) {
-            validationErrors.add("Quantity not specified");
-        }
         if(resource.getQuantity() <0) {
             validationErrors.add("Wrong quantity");
         }
 
         return new ErrorsResource(validationErrors);
+    }
+
+    private boolean validateUniqueIsbn(String isbn) {
+        return service.hasNoSuchIsbn(isbn);
     }
 }

@@ -14,6 +14,7 @@ public class LoanCreationValidator {
     private UserService userService;
     private EditionService editionService;
 
+    //to ma byc autowired?
     public LoanCreationValidator(UserService userService, EditionService editionService) {
         this.userService = userService;
         this.editionService = editionService;

@@ -42,4 +42,8 @@ public class EditionService {
         return editionRepository.findOne(id).canBeLend();
     }
 
+    public boolean hasNoSuchIsbn(String isbn) {
+        return editionRepository.findByIsbn(isbn).isEmpty();
+    }
+
 }

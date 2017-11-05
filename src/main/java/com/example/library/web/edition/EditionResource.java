@@ -8,7 +8,7 @@ public class EditionResource {
     private long id;
     private String isbn;
     private Year publicationYear;
-    private Long quantity;
+    private long quantity;
     private long onLoan;
     private long bookId;
 
@@ -48,11 +48,11 @@ public class EditionResource {
         this.publicationYear = publicationYear;
     }
 
-    public Long getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
