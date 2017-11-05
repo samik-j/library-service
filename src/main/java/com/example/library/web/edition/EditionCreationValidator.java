@@ -22,7 +22,7 @@ public class EditionCreationValidator {
         if(resource.getIsbn() == null || resource.getIsbn().isEmpty()) {
             validationErrors.add("Isbn not specified");
         }
-        if(resource.getIsbn() != null && !validateUniqueIsbn(resource.getIsbn())) {
+        if(!validateUniqueIsbn(resource.getIsbn())) {
             validationErrors.add("Isbn already exists");
         }
         if(resource.getIsbn().length() != 8 && resource.getIsbn().length() != 13) {
@@ -39,6 +39,6 @@ public class EditionCreationValidator {
     }
 
     private boolean validateUniqueIsbn(String isbn) {
-        return service.hasNoSuchIsbn(isbn);
+        return isbn != null && service.hasNoSuchIsbn(isbn);
     }
 }

@@ -43,7 +43,7 @@ public class EditionService {
     }
 
     public boolean hasNoSuchIsbn(String isbn) {
-        return editionRepository.findByIsbn(isbn).isEmpty();
+        return editionRepository.findByIsbn(isbn) == null;
     }
 
 }

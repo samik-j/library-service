@@ -37,4 +37,8 @@ public class BookService {
     public List<Book> findBooks(String title, String author) {
         return repository.findBooks(title, author);
     }
+
+    public boolean hasNoSuchBook(BookResource resource) {
+        return repository.findBook(resource.getTitle(), resource.getAuthor()) == null;
+    }
 }

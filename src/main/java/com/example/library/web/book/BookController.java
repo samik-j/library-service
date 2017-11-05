@@ -40,7 +40,7 @@ public class BookController {
         Book book = service.findBookById(bookId);
 
         if(book != null) {
-            return new ResponseEntity(getBookResource(book), HttpStatus.OK);
+            return new ResponseEntity<Object>(getBookResource(book), HttpStatus.OK);
         }
         else {
             return ResponseEntity.notFound().build();
@@ -56,10 +56,10 @@ public class BookController {
         if(errorsResource.getValidationErrors().isEmpty()) {
             Book book = service.registerBook(resource);
 
-            return new ResponseEntity(getBookResource(book), HttpStatus.OK);
+            return new ResponseEntity<Object>(getBookResource(book), HttpStatus.OK);
         }
         else {
-            return new ResponseEntity(errorsResource, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
 
