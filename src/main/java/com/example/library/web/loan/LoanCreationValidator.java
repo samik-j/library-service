@@ -25,10 +25,10 @@ public class LoanCreationValidator {
         if(!validateUserExistence(resource.getUserId())) {
             validationErrors.add("User does not exist");
         }
-        else if(!validateEditionExistence(resource.getEditionId())) {
+        if(!validateEditionExistence(resource.getEditionId())) {
             validationErrors.add("Edition does not exist");
         }
-        else if(!validateLoan(resource.getEditionId())) {
+        if(!validateLoan(resource.getEditionId())) {
             validationErrors.add("Not possible to loan because of insufficient quantity available");
         }
         

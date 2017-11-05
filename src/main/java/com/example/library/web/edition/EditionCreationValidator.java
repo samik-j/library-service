@@ -15,13 +15,13 @@ public class EditionCreationValidator {
         if(resource.getIsbn() == null || resource.getIsbn().isEmpty()) {
             validationErrors.add("Isbn not specified");
         }
-        else if(resource.getPublicationYear() == null) {
+        if(resource.getPublicationYear() == null) {
             validationErrors.add("Publication year not specified");
         }
-        else if(resource.getQuantity() == null) {
+        if(resource.getQuantity() == null) {
             validationErrors.add("Quantity not specified");
         }
-        else if(resource.getQuantity() <0) {
+        if(resource.getQuantity() <0) {
             validationErrors.add("Wrong quantity");
         }
 
