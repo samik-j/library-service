@@ -18,4 +18,5 @@ public interface BookRepository extends JpaRepository<Book, Long>{ // <Book, Lon
             "book.title LIKE :title AND book.author LIKE :author")
     Book findBook(@Param("title") String title, @Param("author") String author);
 
+    //existsByTitleAndAuthor
 }

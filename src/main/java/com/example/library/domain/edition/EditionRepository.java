@@ -17,4 +17,6 @@ public interface EditionRepository extends JpaRepository<Edition, Long> { // <Ed
     @Query("SELECT edition FROM Edition edition WHERE edition.isbn = :isbn")
     Edition findByIsbn(@Param("isbn") String isbn);
 
+    boolean existsByIsbn(String isbn);
+
 }

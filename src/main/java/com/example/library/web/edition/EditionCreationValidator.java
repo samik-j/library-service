@@ -11,7 +11,7 @@ import java.util.List;
 public class EditionCreationValidator {
 
     private EditionService service;
-    //Autowired?
+
     public EditionCreationValidator(EditionService service) {
         this.service = service;
     }

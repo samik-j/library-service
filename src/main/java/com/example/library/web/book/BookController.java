@@ -3,6 +3,7 @@ package com.example.library.web.book;
 import com.example.library.domain.book.Book;
 import com.example.library.domain.book.BookService;
 import com.example.library.web.ErrorsResource;
+import com.example.library.web.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class BookController {
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
-    public ResponseEntity<Object> getBook(@PathVariable long bookId) {
+    public ResponseEntity<Object> getBook(@PathVariable long bookId) { // moze zwraca bookResource
         Book book = service.findBookById(bookId);
 
         if(book != null) {
@@ -65,9 +66,15 @@ public class BookController {
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.PUT)
     public BookResource updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
-        Book book = service.updateBook(bookId, resource);
 
-        return getBookResource(book);
+        if(service.bookExists(bookId)) {
+            Book book = service.updateBook(bookId, resource);
+
+            return getBookResource(book);
+        }
+        else {
+            throw new ResourceNotFoundException();
+        }
     }
 
     private BookResource getBookResource(Book book) {

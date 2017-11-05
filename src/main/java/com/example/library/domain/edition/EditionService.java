@@ -5,6 +5,7 @@ import com.example.library.domain.book.BookRepository;
 import com.example.library.web.edition.EditionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,13 +21,15 @@ public class EditionService {
         this.bookRepository = bookRepository;
     }
 
-    //albo ma byc transactional albo usunac zmiany na book
+    @Transactional //albo ma byc transactional albo usunac zmiany na book
     public Edition registerEdition(long bookId, EditionResource resource) {
         Book book = bookRepository.findOne(bookId);
         Edition edition = new Edition(resource.getIsbn(), resource.getPublicationYear(), resource.getQuantity(), book);
+
         book.addEdition(edition);
         Edition savedEdition = editionRepository.save(edition);
         bookRepository.save(book);
+
         return savedEdition;
     }
 
@@ -43,7 +46,7 @@ public class EditionService {
     }
 
     public boolean hasNoSuchIsbn(String isbn) {
-        return editionRepository.findByIsbn(isbn) == null;
+        return !editionRepository.existsByIsbn(isbn);
     }
 
 }
