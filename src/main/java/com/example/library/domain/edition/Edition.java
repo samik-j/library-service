@@ -85,6 +85,10 @@ public class Edition {
         }
     }
 
+    public void returnEdition() {
+        --onLoan;
+    }
+
     boolean canBeLend() {
         return quantity > onLoan;
     }

@@ -63,7 +63,12 @@ public class Loan {
     }
 
     void returnLoan() {
-        this.returned = true;
+        if(!returned) {
+            returned = true;
+        }
+        else {
+            throw new LoanAlreadyReturnedException(id);
+        }
     }
 
 }

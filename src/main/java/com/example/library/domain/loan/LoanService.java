@@ -51,8 +51,15 @@ public class LoanService {
     @Transactional
     public Loan returnLoan(long loanId) {
         Loan loan = loanRepository.findOne(loanId);
+        User user = userRepository.findOne(loan.getUser().getId());
+        Edition edition = editionRepository.findOne(loan.getEdition().getId());
 
         loan.returnLoan();
+        user.returnEdition();
+        edition.returnEdition();
+
+        userRepository.save(user);
+        editionRepository.save(edition);
 
         return loanRepository.save(loan);
     }

@@ -75,7 +75,11 @@ public class User {
         }
     }
 
+    public void returnEdition() {
+        --borrowed;
+    }
+
     boolean canBorrow() {
-        return this.borrowed <= 5;
+        return this.borrowed < 5;
     }
 }
