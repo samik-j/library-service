@@ -40,10 +40,9 @@ public class BookController {
     public BookResource getBook(@PathVariable long bookId) {
         Book book = service.findBookById(bookId);
 
-        if(book != null) {
+        if (book != null) {
             return getBookResource(book);
-        }
-        else {
+        } else {
             throw new ResourceNotFoundException();
         }
     }
@@ -54,25 +53,24 @@ public class BookController {
 
         ErrorsResource errorsResource = validator.validate(resource);
 
-        if(errorsResource.getValidationErrors().isEmpty()) {
+        if (errorsResource.getValidationErrors().isEmpty()) {
             Book book = service.registerBook(resource);
 
             return new ResponseEntity<Object>(getBookResource(book), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.PUT)
     public BookResource updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
+        LOGGER.info("Book updated: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
 
-        if(service.bookExists(bookId)) {
+        if (service.bookExists(bookId)) {
             Book book = service.updateBook(bookId, resource);
 
             return getBookResource(book);
-        }
-        else {
+        } else {
             throw new ResourceNotFoundException();
         }
     }
@@ -84,7 +82,7 @@ public class BookController {
     private List<BookResource> getBookResources(Collection<Book> books) {
         List<BookResource> bookResources = new ArrayList<>();
 
-        for(Book book : books) {
+        for (Book book : books) {
             bookResources.add(getBookResource(book));
         }
 

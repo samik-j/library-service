@@ -48,12 +48,11 @@ public class EditionController {
         validateBookExistence(bookId);
         ErrorsResource errorsResource = validator.validate(resource);
 
-        if(errorsResource.getValidationErrors().isEmpty()) {
+        if (errorsResource.getValidationErrors().isEmpty()) {
             Edition edition = service.registerEdition(bookId, resource);
 
             return new ResponseEntity<Object>(getEditionResource(edition), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
@@ -65,7 +64,7 @@ public class EditionController {
     private List<EditionResource> getEditionResources(Collection<Edition> editions) {
         List<EditionResource> editionResources = new ArrayList<>();
 
-        for(Edition edition : editions) {
+        for (Edition edition : editions) {
             editionResources.add(getEditionResource(edition));
         }
 
@@ -75,7 +74,7 @@ public class EditionController {
     private void validateBookExistence(@PathVariable long bookId) {
         Book book = bookService.findBookById(bookId);
 
-        if(book == null) {
+        if (book == null) {
             throw new ResourceNotFoundException();
         }
     }

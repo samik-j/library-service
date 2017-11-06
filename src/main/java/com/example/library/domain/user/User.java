@@ -67,10 +67,9 @@ public class User {
     }
 
     public void borrow() {
-        if(canBorrow()) {
+        if (canBorrow()) {
             ++borrowed;
-        }
-        else {
+        } else {
             throw new BorrowedLimitExceededException(id);
         }
     }

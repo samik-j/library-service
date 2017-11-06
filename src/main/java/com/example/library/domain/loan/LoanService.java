@@ -73,10 +73,9 @@ public class LoanService {
     }
 
     public List<Loan> findLoans(LoanOverdue overdue) {
-        if(overdue == LoanOverdue.NOW) {
+        if (overdue == LoanOverdue.NOW) {
             return loanRepository.findByDateToReturnBefore(LocalDate.now());
-        }
-        else if(overdue == LoanOverdue.SOON){
+        } else if (overdue == LoanOverdue.SOON) {
             return loanRepository.findByDateToReturnBefore(LocalDate.now().plusDays(5));
         }
         throw new UnsupportedLoanOverdueException();

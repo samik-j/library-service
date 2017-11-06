@@ -65,7 +65,7 @@ public class Edition {
     }
 
     public void setBook(Book book_id) {
-        this.book= book_id;
+        this.book = book_id;
     }
 
     public long getOnLoan() {
@@ -77,10 +77,9 @@ public class Edition {
     }
 
     public void lend() {
-        if(canBeLend()) {
+        if (canBeLend()) {
             ++onLoan;
-        }
-        else {
+        } else {
             throw new InsufficientEditionQuantityException(id);
         }
     }

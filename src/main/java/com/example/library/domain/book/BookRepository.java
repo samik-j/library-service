@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<Book, Long>{ // <Book, Long> <typ Entity, typ id ktore ma Entity>
+public interface BookRepository extends JpaRepository<Book, Long> { // <Book, Long> <typ Entity, typ id ktore ma Entity>
 
     @Query("SELECT book FROM Book book WHERE " +
             "(:title IS NULL OR book.title LIKE CONCAT ('%', :title, '%')) AND " +

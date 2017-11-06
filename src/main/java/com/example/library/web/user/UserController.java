@@ -38,10 +38,9 @@ public class UserController {
     public UserResource getUser(@PathVariable long userId) {
         User user = service.findUser(userId);
 
-        if(user != null) {
+        if (user != null) {
             return getUserResource(user);
-        }
-        else {
+        } else {
             throw new ResourceNotFoundException();
         }
 
@@ -54,25 +53,25 @@ public class UserController {
 
         ErrorsResource errorsResource = validator.validate(resource);
 
-        if(errorsResource.getValidationErrors().isEmpty()) {
+        if (errorsResource.getValidationErrors().isEmpty()) {
             User user = service.registerUser(resource);
 
             return new ResponseEntity<Object>(getUserResource(user), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{userId}")
     public UserResource updateUser(@PathVariable long userId, @RequestBody UserResource resource) {
+        LOGGER.info("User updated: firstName: {}, lastName: {}",
+                resource.getFirstName(), resource.getLastName());
 
-        if(service.userExists(userId)) {
+        if (service.userExists(userId)) {
             User user = service.updateUser(userId, resource);
 
             return getUserResource(user);
-        }
-        else {
+        } else {
             throw new ResourceNotFoundException();
         }
     }
@@ -84,7 +83,7 @@ public class UserController {
     private List<UserResource> getUserResources(Collection<User> users) {
         List<UserResource> userResources = new ArrayList<>();
 
-        for(User user : users) {
+        for (User user : users) {
             userResources.add(new UserResource(user));
         }
 

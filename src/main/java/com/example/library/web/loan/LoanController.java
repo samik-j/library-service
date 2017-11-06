@@ -55,12 +55,11 @@ public class LoanController {
 
         ErrorsResource errorsResource = validator.validate(resource);
 
-        if(errorsResource.getValidationErrors().isEmpty()) {
+        if (errorsResource.getValidationErrors().isEmpty()) {
             Loan loan = service.registerLoan(resource);
 
             return new ResponseEntity<Object>(getLoanResource(loan), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
@@ -69,12 +68,11 @@ public class LoanController {
     public LoanResource returnLoan(@PathVariable long loanId) {
         LOGGER.info("Loan returned: {}", loanId);
 
-        if(service.loanExists(loanId)) {
+        if (service.loanExists(loanId)) {
             Loan returned = service.returnLoan(loanId);
 
             return getLoanResource(returned);
-        }
-        else {
+        } else {
             throw new ResourceNotFoundException();
         }
     }
@@ -86,7 +84,7 @@ public class LoanController {
     private List<LoanResource> getLoanResources(List<Loan> loans) {
         List<LoanResource> loanResources = new ArrayList<>();
 
-        for(Loan loan : loans) {
+        for (Loan loan : loans) {
             loanResources.add(getLoanResource(loan));
         }
 
