@@ -37,14 +37,14 @@ public class BookController {
     }
 
     @RequestMapping("/{bookId}") //tego uzywac tylko jezeli zmienna jest identyfikatorem obiektu
-    public ResponseEntity<Object> getBook(@PathVariable long bookId) { // moze zwraca bookResource
+    public BookResource getBook(@PathVariable long bookId) {
         Book book = service.findBookById(bookId);
 
         if(book != null) {
-            return new ResponseEntity<Object>(getBookResource(book), HttpStatus.OK);
+            return getBookResource(book);
         }
         else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException();
         }
     }
 
