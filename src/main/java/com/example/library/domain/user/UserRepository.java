@@ -13,5 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "ORDER BY user.lastName, user.firstName")
     List<User> findUsers(@Param("lastName") String lastName);
 
+    @Query("SELECT user FROM User user WHERE " +
+            "user.firstName LIKE :firstName AND " +
+            "user.lastName LIKE :lastName")
+    User findUser(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
 }

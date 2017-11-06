@@ -40,4 +40,8 @@ public class UserService {
     public boolean userExists(long userId) {
         return repository.exists(userId);
     }
+
+    public boolean hasNoSuchUser(UserResource resource) {
+        return repository.findUser(resource.getFirstName(), resource.getLastName()) == null;
+    }
 }
