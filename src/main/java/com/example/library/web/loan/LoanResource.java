@@ -7,8 +7,8 @@ import java.time.LocalDate;
 public class LoanResource {
 
     private long id;
-    private long userId;
-    private long editionId;
+    private Long userId;
+    private Long editionId;
     private LocalDate dateLent;
     private LocalDate dateToReturn;
     private boolean isOverdue;
@@ -25,7 +25,7 @@ public class LoanResource {
         this.dateToReturn = loan.getDateToReturn();
         this.isOverdue = loan.isOverdue();
         this.returned = loan.isReturned();
-}
+    }
 
     public long getId() {
         return id;
@@ -35,19 +35,19 @@ public class LoanResource {
         this.id = id;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public long getEditionId() {
+    public Long getEditionId() {
         return editionId;
     }
 
-    public void setEditionId(long editionId) {
+    public void setEditionId(Long editionId) {
         this.editionId = editionId;
     }
 

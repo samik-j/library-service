@@ -15,43 +15,53 @@ public class LoanCreationValidator {
     private EditionService editionService;
 
     //jest autowired automatycznie
-    public LoanCreationValidator(UserService userService, EditionService editionService) {
+    public LoanCreationValidator (UserService userService, EditionService editionService) {
         this.userService = userService;
         this.editionService = editionService;
     }
 
-    ErrorsResource validate(LoanResource resource) {
-        List<String> validationErrors = new ArrayList<>();
+    ErrorsResource validate (LoanResource resource) {
+        List<String> validationErrors = new ArrayList<> ();
 
-        if(!validateUserExistence(resource.getUserId())) {
-            validationErrors.add("User does not exist");
+        if (resource.getUserId () == null) {
+            validationErrors.add ("User id not specified");
+        } else {
+            if (!validateUserExistence (resource.getUserId ())) {
+                validationErrors.add ("User does not exist");
+            } else {
+                if (!validateUserBorrowingAvailability (resource.getUserId ())) {
+                    validationErrors.add ("Not possible to loan because user has reached borrowing limit");
+                }
+            }
         }
-        if(!validateEditionExistence(resource.getEditionId())) {
-            validationErrors.add("Edition does not exist");
+        if (resource.getEditionId () == null) {
+            validationErrors.add ("Edition id not specified");
+        } else {
+            if (!validateEditionExistence (resource.getEditionId ())) {
+                validationErrors.add ("Edition does not exist");
+            } else {
+                if (!validateEditionAvailability (resource.getEditionId ())) {
+                    validationErrors.add ("Not possible to loan because of insufficient quantity available");
+                }
+            }
         }
-        if(!validateEditionAvailability(resource.getEditionId())) {
-            validationErrors.add("Not possible to loan because of insufficient quantity available");
-        }
-        if(!validateUserBorrowingAvailability(resource.getUserId())) {
-            validationErrors.add("Not possible to loan because user has reached borrowing limit");
-        }
-        
-        return new ErrorsResource(validationErrors);
+
+        return new ErrorsResource (validationErrors);
     }
 
-    private boolean validateUserExistence(long userId) {
-        return userService.userExists(userId);
+    private boolean validateUserExistence (long userId) {
+        return userService.userExists (userId);
     }
 
-    private boolean validateEditionExistence(long editionId) {
-        return editionService.editionExists(editionId);
+    private boolean validateEditionExistence (long editionId) {
+        return editionService.editionExists (editionId);
     }
 
-    private boolean validateEditionAvailability(long editionId) {
-        return editionService.canBeLend(editionId);
+    private boolean validateEditionAvailability (long editionId) {
+        return editionService.canBeLend (editionId);
     }
 
-    private boolean validateUserBorrowingAvailability(long userId) {
-        return userService.canBorrow(userId);
+    private boolean validateUserBorrowingAvailability (long userId) {
+        return userService.canBorrow (userId);
     }
 }

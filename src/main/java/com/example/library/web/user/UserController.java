@@ -66,9 +66,15 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public UserResource updateUser(@PathVariable long userId, @RequestBody UserResource resource) {
-        User user = service.updateUser(userId, resource);
 
-        return getUserResource(user);
+        if(service.userExists(userId)) {
+            User user = service.updateUser(userId, resource);
+
+            return getUserResource(user);
+        }
+        else {
+            throw new ResourceNotFoundException();
+        }
     }
 
     private UserResource getUserResource(User user) {

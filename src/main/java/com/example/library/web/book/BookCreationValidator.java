@@ -12,29 +12,29 @@ public class BookCreationValidator {
 
     private BookService bookService;
 
-    public BookCreationValidator(BookService bookService) {
+    public BookCreationValidator (BookService bookService) {
         this.bookService = bookService;
     }
 
-    ErrorsResource validate(BookResource resource) {
-        List<String> validationErrors = new ArrayList<>();
+    ErrorsResource validate (BookResource resource) {
+        List<String> validationErrors = new ArrayList<> ();
 
-        if(resource.getTitle() == null || resource.getTitle().isEmpty()) {
-            validationErrors.add("Title not specified");
+        if (resource.getTitle () == null || resource.getTitle ().isEmpty ()) {
+            validationErrors.add ("Title not specified");
         }
-        if(resource.getAuthor() == null || resource.getAuthor().isEmpty()) {
-            validationErrors.add("Author not specified");
+        if (resource.getAuthor () == null || resource.getAuthor ().isEmpty ()) {
+            validationErrors.add ("Author not specified");
         }
-        if(resource.getTitle() != null &&
-                resource.getAuthor() != null &&
-                !validateUniqueBook(resource)) {
-            validationErrors.add("Book already exists");
+        if (resource.getTitle () != null &&
+                resource.getAuthor () != null &&
+                !validateUniqueBook (resource)) {
+            validationErrors.add ("Book already exists");
         }
 
-        return new ErrorsResource(validationErrors);
+        return new ErrorsResource (validationErrors);
     }
 
-    private boolean validateUniqueBook(BookResource resource) {
-        return bookService.hasNoSuchBook(resource);
+    private boolean validateUniqueBook (BookResource resource) {
+        return bookService.hasNoSuchBook (resource);
     }
 }
