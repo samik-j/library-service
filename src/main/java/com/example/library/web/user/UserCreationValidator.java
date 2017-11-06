@@ -25,7 +25,9 @@ public class UserCreationValidator {
         if(resource.getLastName() == null || resource.getLastName().isEmpty()) {
             validationErrors.add("Last name not specified");
         }
-        if(!validateUniqueUser(resource)) {
+        if(resource.getFirstName() != null &&
+                resource.getLastName() != null &&
+                !validateUniqueUser(resource)) {
             validationErrors.add("User already exists");
         }
         return new ErrorsResource(validationErrors);

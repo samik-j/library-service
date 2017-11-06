@@ -40,7 +40,7 @@ public class BookService {
     }
 
     public boolean hasNoSuchBook(BookResource resource) {
-        return repository.findBook(resource.getTitle(), resource.getAuthor()) == null;
+        return !repository.existsByTitleAndAuthor(resource.getTitle(), resource.getAuthor());
     }
 
     public boolean bookExists(long bookId) {

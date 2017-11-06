@@ -12,7 +12,6 @@ public class BookCreationValidator {
 
     private BookService bookService;
 
-    //autowired?
     public BookCreationValidator(BookService bookService) {
         this.bookService = bookService;
     }
@@ -20,13 +19,15 @@ public class BookCreationValidator {
     ErrorsResource validate(BookResource resource) {
         List<String> validationErrors = new ArrayList<>();
 
-        if (resource.getTitle() == null || resource.getTitle().isEmpty()) {
+        if(resource.getTitle() == null || resource.getTitle().isEmpty()) {
             validationErrors.add("Title not specified");
         }
-        if (resource.getAuthor() == null || resource.getAuthor().isEmpty()) {
+        if(resource.getAuthor() == null || resource.getAuthor().isEmpty()) {
             validationErrors.add("Author not specified");
         }
-        if (!validateUniqueBook(resource)) {
+        if(resource.getTitle() != null &&
+                resource.getAuthor() != null &&
+                !validateUniqueBook(resource)) {
             validationErrors.add("Book already exists");
         }
 

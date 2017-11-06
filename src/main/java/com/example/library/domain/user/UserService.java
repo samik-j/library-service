@@ -42,6 +42,6 @@ public class UserService {
     }
 
     public boolean hasNoSuchUser(UserResource resource) {
-        return repository.findUser(resource.getFirstName(), resource.getLastName()) == null;
+        return !repository.existsByFirstNameAndLastName(resource.getFirstName(), resource.getLastName());
     }
 }
