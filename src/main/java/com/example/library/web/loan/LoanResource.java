@@ -12,6 +12,7 @@ public class LoanResource {
     private LocalDate dateLent;
     private LocalDate dateToReturn;
     private boolean isOverdue;
+    private boolean returned;
 
     public LoanResource() {
     }
@@ -23,6 +24,7 @@ public class LoanResource {
         this.dateLent = loan.getDateLent();
         this.dateToReturn = loan.getDateToReturn();
         this.isOverdue = loan.isOverdue();
+        this.returned = loan.isReturned();
 }
 
     public long getId() {
@@ -71,5 +73,13 @@ public class LoanResource {
 
     public void setOverdue(boolean overdue) {
         isOverdue = overdue;
+    }
+
+    public boolean isReturned() {
+        return returned;
+    }
+
+    public void setReturned(boolean returned) {
+        this.returned = returned;
     }
 }

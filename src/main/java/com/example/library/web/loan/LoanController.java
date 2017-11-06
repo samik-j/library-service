@@ -3,6 +3,7 @@ package com.example.library.web.loan;
 import com.example.library.domain.loan.Loan;
 import com.example.library.domain.loan.LoanService;
 import com.example.library.web.ErrorsResource;
+import com.example.library.web.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,28 @@ public class LoanController {
         this.validator = validator;
     }
 
-    @RequestMapping( method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.GET, params = {"overdue"})
+    public List<LoanResource> getLoans(@RequestParam LoanOverdue overdue) {
+        LOGGER.info("Lent books overdue: {}", overdue);
+
+        return getLoanResources(service.findLoans(overdue));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, params = {"returned"})
+    public List<LoanResource> getLoans(@RequestParam boolean returned) {
+        LOGGER.info("Lent books: {}", returned ? "returned" : "not returned");
+
+        return getLoanResources(service.findLoans(returned));
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<LoanResource> getLoans() {
+        LOGGER.info("Lent books");
+
+        return getLoanResources(service.findLoans());
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> lend(@RequestBody LoanResource resource) {
         LOGGER.info("Loan for userId: {}, editionId: {}", resource.getUserId(), resource.getEditionId());
 
@@ -43,18 +65,18 @@ public class LoanController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = {"overdue"})
-    public List<LoanResource> getLoans(@RequestParam LoanOverdue overdue) {
-        LOGGER.info("Lent books overdue: {}", overdue);
+    @RequestMapping(value = "/{loanId}", method = RequestMethod.PUT)
+    public LoanResource returnLoan(@PathVariable long loanId) {
+        LOGGER.info("Loan returned: {}", loanId);
 
-        return getLoanResources(service.findLoans(overdue));
-    }
+        if(service.loanExists(loanId)) {
+            Loan returned = service.returnLoan(loanId);
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<LoanResource> getLoans() {
-        LOGGER.info("Lent books");
-
-        return getLoanResources(service.findLoans());
+            return getLoanResource(returned);
+        }
+        else {
+            throw new ResourceNotFoundException();
+        }
     }
 
     private LoanResource getLoanResource(Loan loan) {

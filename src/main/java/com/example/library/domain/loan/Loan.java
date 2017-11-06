@@ -20,6 +20,7 @@ public class Loan {
     private Edition edition;
     private LocalDate dateLent;
     private LocalDate dateToReturn;
+    private boolean returned;
 
     private Loan() {
     }
@@ -29,6 +30,7 @@ public class Loan {
         this.edition = edition;
         this.dateLent = LocalDate.now();
         this.dateToReturn = dateLent.plusDays(14);
+        this.returned = false;
     }
 
 
@@ -52,8 +54,16 @@ public class Loan {
         return dateToReturn;
     }
 
+    public boolean isReturned() {
+        return returned;
+    }
+
     public boolean isOverdue() {
         return dateToReturn.isBefore(LocalDate.now());
+    }
+
+    void returnLoan() {
+        this.returned = true;
     }
 
 }
