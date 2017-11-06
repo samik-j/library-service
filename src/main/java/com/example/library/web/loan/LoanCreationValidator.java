@@ -29,8 +29,11 @@ public class LoanCreationValidator {
         if(!validateEditionExistence(resource.getEditionId())) {
             validationErrors.add("Edition does not exist");
         }
-        if(!validateLoan(resource.getEditionId())) {
+        if(!validateEditionAvailability(resource.getEditionId())) {
             validationErrors.add("Not possible to loan because of insufficient quantity available");
+        }
+        if(!validateUserBorrowingAvailability(resource.getUserId())) {
+            validationErrors.add("Not possible to loan because user has reached borrowing limit");
         }
         
         return new ErrorsResource(validationErrors);
@@ -44,7 +47,11 @@ public class LoanCreationValidator {
         return editionService.editionExists(editionId);
     }
 
-    private boolean validateLoan(long editionId) {
+    private boolean validateEditionAvailability(long editionId) {
         return editionService.canBeLend(editionId);
+    }
+
+    private boolean validateUserBorrowingAvailability(long userId) {
+        return userService.canBorrow(userId);
     }
 }

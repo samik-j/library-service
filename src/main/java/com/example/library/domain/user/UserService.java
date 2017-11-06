@@ -44,4 +44,8 @@ public class UserService {
     public boolean hasNoSuchUser(UserResource resource) {
         return !repository.existsByFirstNameAndLastName(resource.getFirstName(), resource.getLastName());
     }
+
+    public boolean canBorrow(long userId) {
+        return repository.findOne(userId).canBorrow();
+    }
 }

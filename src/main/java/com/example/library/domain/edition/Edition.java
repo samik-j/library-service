@@ -81,7 +81,7 @@ public class Edition {
             ++onLoan;
         }
         else {
-            throw new InsufficientEditionQuantityException(this.id);
+            throw new InsufficientEditionQuantityException(id);
         }
     }
 

@@ -1,8 +1,8 @@
 package com.example.library.domain.edition;
 
-public class InsufficientEditionQuantityException extends RuntimeException {
+class InsufficientEditionQuantityException extends RuntimeException {
 
-    public InsufficientEditionQuantityException(long id) {
+    InsufficientEditionQuantityException(long id) {
         super("Insufficient quantity for Edition with id " + id);
     }
 }

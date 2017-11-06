@@ -10,6 +10,7 @@ public class UserResource {
     private String firstName;
     private String lastName;
     private LocalDate dateJoined;
+    private int borrowed;
 
     public UserResource() {
     }
@@ -19,6 +20,7 @@ public class UserResource {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.dateJoined = user.getDateJoined();
+        this.borrowed = user.getBorrowed();
     }
 
     public long getId() {
@@ -51,5 +53,13 @@ public class UserResource {
 
     public void setDateJoined(LocalDate dateJoined) {
         this.dateJoined = dateJoined;
+    }
+
+    public int getBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(int borrowed) {
+        this.borrowed = borrowed;
     }
 }

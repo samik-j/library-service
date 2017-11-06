@@ -15,6 +15,7 @@ public class User {
     private String firstName;
     private String lastName;
     private LocalDate dateJoined;
+    private int borrowed;
 
     User() {
     }
@@ -23,6 +24,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateJoined = LocalDate.now();
+        this.borrowed = 0;
     }
 
     public long getId() {
@@ -53,10 +55,27 @@ public class User {
         this.dateJoined = dateJoined;
     }
 
+    public int getBorrowed() {
+        return borrowed;
+    }
+
     void updateLastName(String updatedName) {
         if (updatedName == null) {
             throw new IllegalArgumentException();
         }
         this.lastName = updatedName;
+    }
+
+    public void borrow() {
+        if(canBorrow()) {
+            ++borrowed;
+        }
+        else {
+            throw new BorrowedLimitExceededException(id);
+        }
+    }
+
+    boolean canBorrow() {
+        return this.borrowed <= 5;
     }
 }

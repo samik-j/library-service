@@ -1,5 +1,6 @@
 package com.example.library.domain.loan;
 
+import com.example.library.domain.user.User;
 import com.example.library.domain.user.UserRepository;
 import com.example.library.domain.edition.Edition;
 import com.example.library.domain.edition.EditionRepository;
@@ -31,9 +32,12 @@ public class LoanService {
     //jezeli w tej klasie zawolam ta metode to nie bedzie tu transakcyjna
     public Loan registerLoan(LoanResource resource) {
         Edition edition = editionRepository.findOne(resource.getEditionId());
+        User user = userRepository.findOne(resource.getUserId());
 
         edition.lend();
         editionRepository.save(edition);
+        user.borrow();
+        userRepository.save(user);
 
         Loan loan = new Loan(userRepository.findOne(resource.getUserId()), editionRepository.findOne(resource.getEditionId()));
 
