@@ -34,8 +34,6 @@ public class BookCreationValidator {
     }
 
     private boolean validateUniqueBook(BookResource resource) {
-        return resource.getTitle() != null
-                && resource.getAuthor() != null
-                && bookService.hasNoSuchBook(resource);
+        return bookService.hasNoSuchBook(resource);
     }
 }

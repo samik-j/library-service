@@ -24,6 +24,7 @@ public class BookService {
 
     public Book updateBook(Long id, BookResource resource) {
         Book book = repository.findOne(id);
+
         book.updateAuthor(resource.getAuthor());
         book.updateTitle(resource.getTitle());
 
