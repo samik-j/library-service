@@ -41,32 +41,16 @@ public class Edition {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
     public Year getPublicationYear() {
         return publicationYear;
-    }
-
-    public void setPublicationYear(Year publicationYear) {
-        this.publicationYear = publicationYear;
     }
 
     public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
-        this.quantity = quantity;
-    }
-
     public Book getBook() {
         return book;
-    }
-
-    public void setBook(Book book_id) {
-        this.book = book_id;
     }
 
     public long getOnLoan() {

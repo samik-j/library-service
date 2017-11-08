@@ -37,34 +37,18 @@ public class Book {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getAuthor() {
         return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public Set<Edition> getEditions() {
         return editions;
     }
 
-    public void setEditions(Set<Edition> editions) {
-        this.editions = editions;
-    }
-
     public Year getPublicationYear() {
         return publicationYear;
     }
-
-    public void setPublicationYear(Year publicationYear) {
-        this.publicationYear = publicationYear;
-    }
-
+    
     void updateTitle(String title) {
         if (title == null) {
             throw new IllegalArgumentException();
