@@ -37,12 +37,12 @@ public class EditionService {
         return editionRepository.findEditions(bookId, isbn);
     }
 
-    public boolean editionExists(long id) {
-        return editionRepository.exists(id);
+    public boolean editionExists(long editionId) {
+        return editionRepository.exists(editionId);
     }
 
-    public boolean canBeLend(long id) {
-        return editionRepository.findOne(id).canBeLend();
+    public boolean canBeLend(long editionId) {
+        return editionRepository.findOne(editionId).canBeLend();
     }
 
     public boolean hasNoSuchIsbn(String isbn) {

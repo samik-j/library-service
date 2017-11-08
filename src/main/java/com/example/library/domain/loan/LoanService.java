@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,6 +71,23 @@ public class LoanService {
 
     public List<Loan> findLoans(boolean returned) {
         return loanRepository.findByReturned(returned);
+    }
+
+    public List<Loan> findLoans(long bookId) {
+        List<Edition> editionsByBookId = editionRepository.findByBookId(bookId);
+        List<Loan> loansByBookId = new ArrayList<>();
+
+        for(Edition edition : editionsByBookId) {
+            if(existsLoanWithEditionId(edition.getId())) {
+                loansByBookId.addAll(loanRepository.findByEdition(edition));
+            }
+        }
+
+        return loansByBookId;
+    }
+
+    private boolean existsLoanWithEditionId(long editionId) {
+        return loanRepository.existsByEditionId(editionId);
     }
 
     public List<Loan> findLoans(LoanOverdue overdue) {

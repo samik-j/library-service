@@ -44,6 +44,11 @@ public class LoanController {
         return getLoanResources(service.findLoans(returned));
     }
 
+    @RequestMapping(method = RequestMethod.GET, params = {"bookId"})
+    public List<LoanResource> getLoans(@RequestParam long bookId) {
+        return getLoanResources(service.findLoans(bookId));
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public List<LoanResource> getLoans() {
         LOGGER.info("Lent books");
