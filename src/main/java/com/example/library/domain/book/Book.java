@@ -4,6 +4,7 @@ import com.example.library.domain.edition.Edition;
 
 import javax.persistence.*;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ public class Book {
     private String title;
     private String author;
     private Year publicationYear;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     // lazy wczyta mi edycje dopiero jak bede ich uzywac albo moze byc EAGER to wtedy jak wczytuje Book to odrazu wczyta z calym setem Editin
     private Set<Edition> editions;
 
@@ -27,6 +28,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
+        this.editions = new HashSet<>();
     }
 
     public long getId() {
@@ -48,7 +50,7 @@ public class Book {
     public Year getPublicationYear() {
         return publicationYear;
     }
-    
+
     void updateTitle(String title) {
         if (title == null) {
             throw new IllegalArgumentException();
@@ -56,7 +58,7 @@ public class Book {
         this.title = title;
     }
 
-    void updateAuthor(String author) { // brak modyfikatora znaczu ze jest package private
+    void updateAuthor(String author) {
         if (author == null) {
             throw new IllegalArgumentException();
         }
@@ -67,4 +69,27 @@ public class Book {
         editions.add(edition);
     }
 
+    public int getQuantity() {
+        int quantity = 0;
+
+        for(Edition edition : editions) {
+            quantity += edition.getQuantity();
+        }
+
+        return quantity;
+    }
+
+    public int getOnLoanQuantity() {
+        int onLoan = 0;
+
+        for(Edition edition : editions) {
+            onLoan += edition.getOnLoan();
+        }
+
+        return onLoan;
+    }
+
+    public int getNumberOfEditions() {
+        return editions.size();
+    }
 }

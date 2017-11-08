@@ -10,6 +10,9 @@ public class BookResource {
     private String title;
     private String author;
     private Year publicationYear;
+    private int quantity;
+    private int onLoan;
+    private int numberOfEditions;
 
     public BookResource() {
     }
@@ -19,6 +22,9 @@ public class BookResource {
         this.title = book.getTitle();
         this.author = book.getAuthor();
         this.publicationYear = book.getPublicationYear();
+        this.quantity = book.getQuantity();
+        this.onLoan = book.getOnLoanQuantity();
+        this.numberOfEditions = book.getNumberOfEditions();
     }
 
     public long getId() {
@@ -51,5 +57,29 @@ public class BookResource {
 
     public void setPublicationYear(Year publicationYear) {
         this.publicationYear = publicationYear;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getOnLoan() {
+        return onLoan;
+    }
+
+    public void setOnLoan(int onLoan) {
+        this.onLoan = onLoan;
+    }
+
+    public int getNumberOfEditions() {
+        return numberOfEditions;
+    }
+
+    public void setNumberOfEditions(int numberOfEditions) {
+        this.numberOfEditions = numberOfEditions;
     }
 }
