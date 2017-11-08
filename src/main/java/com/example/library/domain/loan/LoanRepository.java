@@ -1,6 +1,5 @@
 package com.example.library.domain.loan;
 
-import com.example.library.domain.edition.Edition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,9 +15,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     @Query("SELECT loan FROM Loan loan WHERE loan.returned = :returned")
     List<Loan> findByReturned(@Param("returned") boolean returned);
 
-    boolean existsByEditionId(long editionId);
-
-    List<Loan> findByEdition(Edition edition);
+    @Query("SELECT loan FROM Loan loan WHERE loan.edition.book.id = :bookId")
+    List<Loan> findByBookId(@Param("bookId") long bookId);
 
 }
-
