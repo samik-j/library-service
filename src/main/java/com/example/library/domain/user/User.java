@@ -1,5 +1,7 @@
 package com.example.library.domain.user;
 
+import com.example.library.domain.InsufficientQuantityToDecreaseException;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -74,11 +76,20 @@ public class User {
         }
     }
 
-    public void returnEdition() {
-        --borrowed;
+    boolean canBorrow() {
+        return borrowed < 5;
     }
 
-    boolean canBorrow() {
-        return this.borrowed < 5;
+    public void returnEdition() {
+        if (borrowed > 0) {
+            --borrowed;
+        } else {
+            throw new InsufficientQuantityToDecreaseException();
+        }
     }
+
+    boolean canReturn() {
+        return borrowed > 0;
+    }
+
 }

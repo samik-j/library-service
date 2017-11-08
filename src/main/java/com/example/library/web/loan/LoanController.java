@@ -20,12 +20,14 @@ public class LoanController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoanController.class);
     private LoanService service;
-    private LoanCreationValidator validator;
+    private LoanCreationValidator creationValidator;
+    private LoanReturnValidator returnValidator;
 
     @Autowired
-    public LoanController(LoanService service, LoanCreationValidator validator) {
+    public LoanController(LoanService service, LoanCreationValidator creationValidator, LoanReturnValidator returnValidator) {
         this.service = service;
-        this.validator = validator;
+        this.creationValidator = creationValidator;
+        this.returnValidator = returnValidator;
     }
 
     @RequestMapping(method = RequestMethod.GET, params = {"overdue"})
@@ -53,7 +55,7 @@ public class LoanController {
     public ResponseEntity<Object> lend(@RequestBody LoanResource resource) {
         LOGGER.info("Loan for userId: {}, editionId: {}", resource.getUserId(), resource.getEditionId());
 
-        ErrorsResource errorsResource = validator.validate(resource);
+        ErrorsResource errorsResource = creationValidator.validate(resource);
 
         if (errorsResource.getValidationErrors().isEmpty()) {
             Loan loan = service.registerLoan(resource);
@@ -65,15 +67,19 @@ public class LoanController {
     }
 
     @RequestMapping(value = "/{loanId}", method = RequestMethod.PUT)
-    public LoanResource returnLoan(@PathVariable long loanId) {
+    public ResponseEntity<Object> returnLoan(@PathVariable long loanId) {
         LOGGER.info("Loan returned: {}", loanId);
 
-        if (service.loanExists(loanId)) {
+        validateLoanExistence(loanId);
+
+        ErrorsResource errorsResource = returnValidator.validate(getLoanResource(service.findLoan(loanId)));
+
+        if (errorsResource.getValidationErrors().isEmpty()) {
             Loan returned = service.returnLoan(loanId);
 
-            return getLoanResource(returned);
+            return new ResponseEntity<Object>(getLoanResource(returned), HttpStatus.OK);
         } else {
-            throw new ResourceNotFoundException();
+            return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -89,5 +95,11 @@ public class LoanController {
         }
 
         return loanResources;
+    }
+
+    private void validateLoanExistence(long loanId) {
+        if (!service.loanExists(loanId)) {
+            throw new ResourceNotFoundException();
+        }
     }
 }

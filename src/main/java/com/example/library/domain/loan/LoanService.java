@@ -85,4 +85,11 @@ public class LoanService {
 
     }
 
+    public Loan findLoan(long loanId) {
+        return loanRepository.findOne(loanId);
+    }
+
+    public boolean canBeReturned(long loanId) {
+        return !loanRepository.findOne(loanId).isReturned();
+    }
 }

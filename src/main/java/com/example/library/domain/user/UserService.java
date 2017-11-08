@@ -48,4 +48,8 @@ public class UserService {
     public boolean canBorrow(long userId) {
         return repository.findOne(userId).canBorrow();
     }
+
+    public boolean canReturn(long userId) {
+        return repository.findOne(userId).canReturn();
+    }
 }

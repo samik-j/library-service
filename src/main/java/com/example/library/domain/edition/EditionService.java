@@ -49,4 +49,7 @@ public class EditionService {
         return !editionRepository.existsByIsbn(isbn);
     }
 
+    public boolean canBeReturned(long editionId) {
+        return editionRepository.findOne(editionId).canBeReturned();
+    }
 }

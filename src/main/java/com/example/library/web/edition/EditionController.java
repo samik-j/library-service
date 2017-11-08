@@ -46,6 +46,7 @@ public class EditionController {
                 bookId, resource.getIsbn(), resource.getQuantity());
 
         validateBookExistence(bookId);
+
         ErrorsResource errorsResource = validator.validate(resource);
 
         if (errorsResource.getValidationErrors().isEmpty()) {
@@ -72,9 +73,7 @@ public class EditionController {
     }
 
     private void validateBookExistence(@PathVariable long bookId) {
-        Book book = bookService.findBookById(bookId);
-
-        if (book == null) {
+        if (!bookService.bookExists(bookId)) {
             throw new ResourceNotFoundException();
         }
     }

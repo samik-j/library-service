@@ -1,5 +1,6 @@
 package com.example.library.domain.edition;
 
+import com.example.library.domain.InsufficientQuantityToDecreaseException;
 import com.example.library.domain.book.Book;
 
 import javax.persistence.*;
@@ -84,11 +85,20 @@ public class Edition {
         }
     }
 
-    public void returnEdition() {
-        --onLoan;
-    }
-
     boolean canBeLend() {
         return quantity > onLoan;
     }
+
+    public void returnEdition() {
+        if (onLoan > 0) {
+            --onLoan;
+        } else {
+            throw new InsufficientQuantityToDecreaseException();
+        }
+    }
+
+    boolean canBeReturned() {
+        return onLoan > 0;
+    }
+
 }
