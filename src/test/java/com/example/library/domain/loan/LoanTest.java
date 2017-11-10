@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.Year;
 
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 
@@ -29,6 +30,7 @@ public class LoanTest {
         assertEquals(edition, loan.getEdition());
         assertEquals(LocalDate.now(), loan.getDateLent());
         assertEquals(LocalDate.now().plusDays(14), loan.getDateToReturn());
+        assertEquals(false, loan.isReturned());
     }
 
     @Test
@@ -45,4 +47,33 @@ public class LoanTest {
         assertFalse(loan.isOverdue());
     }
 
+    @Test
+    public void shouldEditionBeReturned() {
+        // given
+        Loan loan = createLoan();
+
+        // when
+        loan.returnLoan();
+
+        // then
+        assertTrue(loan.isReturned());
+    }
+
+    @Test(expected = LoanAlreadyReturnedException.class)
+    public void shouldEditionNotBeReturned() {
+        // given
+        Loan loan = createLoan();
+        loan.returnLoan();
+
+        // when
+        loan.returnLoan();
+    }
+
+    private Loan createLoan() {
+        Book book = new Book("title", "author", Year.parse("2000"));
+        User user = new User("Filip", "Karas");
+        Edition edition = new Edition("12342", Year.parse("2000"), 5, book);
+
+        return new Loan(user, edition);
+    }
 }
