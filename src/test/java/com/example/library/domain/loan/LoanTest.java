@@ -48,7 +48,7 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldEditionBeReturned() {
+    public void shouldBeReturned() {
         // given
         Loan loan = createLoan();
 
@@ -60,7 +60,7 @@ public class LoanTest {
     }
 
     @Test(expected = LoanAlreadyReturnedException.class)
-    public void shouldEditionNotBeReturned() {
+    public void shouldNotBeReturnedLoanAndThrowExceptionWhenIsReturnedIsTrue() {
         // given
         Loan loan = createLoan();
         loan.returnLoan();

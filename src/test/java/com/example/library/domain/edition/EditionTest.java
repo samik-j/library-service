@@ -27,7 +27,7 @@ public class EditionTest {
     }
 
     @Test
-    public void shouldBeLend() {
+    public void shouldLend() {
         // given
         Edition edition = createEdition();
 
@@ -39,7 +39,7 @@ public class EditionTest {
     }
 
     @Test(expected = InsufficientEditionQuantityException.class)
-    public void shouldNotBeLend() {
+    public void LendShouldNotIncreaseOnLoanAndThrowExceptionWhenOnLoanEqualsQuantity() {
         // given
         Edition edition = createEdition();
         edition.lend();
@@ -50,7 +50,7 @@ public class EditionTest {
     }
 
     @Test
-    public void shouldBeReturned() {
+    public void shouldReturnEdition() {
         // given
         Edition edition = createEdition();
         edition.lend();
@@ -63,7 +63,7 @@ public class EditionTest {
     }
 
     @Test(expected = InsufficientQuantityToDecreaseException.class)
-    public void shouldNotBeReturned() {
+    public void ReturnLoanShouldNotDecreaseOnLoanAndThrowExceptionWhenOnLoanEqualsZero() {
         // given
         Edition edition = createEdition();
 
