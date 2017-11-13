@@ -41,7 +41,7 @@ public class BookTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldNotUpdateAuthorAndThrowExceptionWhenParameterIsNull() {
+    public void updateAuthorShouldThrowExceptionWhenParameterIsNull() {
         // given
         Book book = new Book("title", "author", Year.parse("2000"));
 
@@ -62,7 +62,7 @@ public class BookTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldNotUpdateTitleAndThrowExceptionWhenParameterIsNull() {
+    public void updateTitleShouldThrowExceptionWhenParameterIsNull() {
         // given
         Book book = new Book("title", "author", Year.parse("2000"));
 

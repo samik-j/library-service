@@ -39,7 +39,7 @@ public class EditionTest {
     }
 
     @Test(expected = InsufficientEditionQuantityException.class)
-    public void LendShouldNotIncreaseOnLoanAndThrowExceptionWhenOnLoanEqualsQuantity() {
+    public void LendShouldThrowExceptionWhenOnLoanEqualsQuantity() {
         // given
         Edition edition = createEdition();
         edition.lend();
@@ -63,7 +63,7 @@ public class EditionTest {
     }
 
     @Test(expected = InsufficientQuantityToDecreaseException.class)
-    public void ReturnLoanShouldNotDecreaseOnLoanAndThrowExceptionWhenOnLoanEqualsZero() {
+    public void ReturnLoanShouldThrowExceptionWhenOnLoanEqualsZero() {
         // given
         Edition edition = createEdition();
 
