@@ -1,8 +1,6 @@
 package com.example.library.web.book;
 
-import com.example.library.domain.book.BookService;
 import com.example.library.web.ErrorsResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,12 +8,6 @@ import java.util.List;
 
 @Component
 public class BookUpdateValidator {
-
-    private BookService service;
-
-    public BookUpdateValidator(BookService service) {
-        this.service = service;
-    }
 
     ErrorsResource validate(BookResource resource) {
         List<String> validationErrors = new ArrayList<>();
@@ -29,6 +21,5 @@ public class BookUpdateValidator {
 
         return new ErrorsResource(validationErrors);
     }
-
 
 }
