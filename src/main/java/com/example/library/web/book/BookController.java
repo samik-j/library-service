@@ -21,12 +21,14 @@ public class BookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private BookService service;
-    private BookCreationValidator validator;
+    private BookCreationValidator creationValidator;
+    private BookUpdateValidator updateValidator;
 
     @Autowired //wstrzykuje zaleznosc bean ktory jest zadeklarowany
-    public BookController(BookService service, BookCreationValidator validator) {
+    public BookController(BookService service, BookCreationValidator creationValidator, BookUpdateValidator updateValidator) {
         this.service = service;
-        this.validator = validator;
+        this.creationValidator = creationValidator;
+        this.updateValidator = updateValidator;
     }
 
     @RequestMapping
@@ -51,7 +53,7 @@ public class BookController {
     public ResponseEntity<Object> addBook(@RequestBody BookResource resource) {
         LOGGER.info("Book added: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
 
-        ErrorsResource errorsResource = validator.validate(resource);
+        ErrorsResource errorsResource = creationValidator.validate(resource);
 
         if (errorsResource.getValidationErrors().isEmpty()) {
             Book book = service.registerBook(resource);
@@ -63,15 +65,18 @@ public class BookController {
     }
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.PUT)
-    public BookResource updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
+    public ResponseEntity<Object> updateBook(@PathVariable long bookId, @RequestBody BookResource resource) {
         LOGGER.info("Book updated: title: {}, author: {}", resource.getTitle(), resource.getAuthor());
 
-        if (service.bookExists(bookId)) {
+        validateBookExistence(bookId);
+        ErrorsResource errorsResource = updateValidator.validate(resource);
+
+        if (errorsResource.getValidationErrors().isEmpty()) {
             Book book = service.updateBook(bookId, resource);
 
-            return getBookResource(book);
+            return new ResponseEntity<Object>(getBookResource(book), HttpStatus.OK);
         } else {
-            throw new ResourceNotFoundException();
+            return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -87,5 +92,11 @@ public class BookController {
         }
 
         return bookResources;
+    }
+
+    private void validateBookExistence(long bookId) {
+        if (!service.bookExists(bookId)) {
+            throw new ResourceNotFoundException();
+        }
     }
 }
