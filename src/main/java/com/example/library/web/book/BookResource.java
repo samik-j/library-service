@@ -82,4 +82,48 @@ public class BookResource {
     public void setNumberOfEditions(int numberOfEditions) {
         this.numberOfEditions = numberOfEditions;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        BookResource resource = (BookResource) o;
+
+        if (id != resource.id) {
+            return false;
+        }
+        if (quantity != resource.quantity) {
+            return false;
+        }
+        if (onLoan != resource.onLoan) {
+            return false;
+        }
+        if (numberOfEditions != resource.numberOfEditions) {
+            return false;
+        }
+        if (title != null ? !title.equals(resource.title) : resource.title != null) {
+            return false;
+        }
+        if (author != null ? !author.equals(resource.author) : resource.author != null) {
+            return false;
+        }
+        return publicationYear != null ? publicationYear.equals(resource.publicationYear) : resource.publicationYear == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (publicationYear != null ? publicationYear.hashCode() : 0);
+        result = 31 * result + quantity;
+        result = 31 * result + onLoan;
+        result = 31 * result + numberOfEditions;
+        return result;
+    }
 }
