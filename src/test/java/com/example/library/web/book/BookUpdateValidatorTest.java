@@ -11,7 +11,7 @@ public class BookUpdateValidatorTest {
     private BookUpdateValidator validator = new BookUpdateValidator();
 
     @Test
-    public void shouldValidate() {
+    public void shouldNotHaveErrors() {
         // given
         BookResource resource = new BookResource();
         resource.setTitle("title");
@@ -25,7 +25,7 @@ public class BookUpdateValidatorTest {
     }
 
     @Test
-    public void shouldNotValidateWhenTitleIsNull() {
+    public void shouldHaveErrorIfTitleIsNull() {
         // given
         BookResource resource = new BookResource();
         resource.setAuthor("author");
@@ -39,7 +39,7 @@ public class BookUpdateValidatorTest {
     }
 
     @Test
-    public void shouldNotValidateWhenAuthorIsNull() {
+    public void shouldHaveErrorIfAuthorIsNull() {
         // given
         BookResource resource = new BookResource();
         resource.setTitle("title");
@@ -53,7 +53,7 @@ public class BookUpdateValidatorTest {
     }
 
     @Test
-    public void shouldNotValidateWhenTitleAndAuthorIsNull() {
+    public void shouldHaveErrorsIfTitleAndAuthorIsNull() {
         // given
         BookResource resource = new BookResource();
 
