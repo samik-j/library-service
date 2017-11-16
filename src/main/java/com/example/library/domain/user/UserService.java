@@ -22,15 +22,15 @@ public class UserService {
         return repository.save(user);
     }
 
-    public List<User> findUsers(String lastName) {
-        return repository.findUsers(lastName);
-    }
-
     public User updateUser(long userId, UserResource resource) {
         User user = repository.findOne(userId);
         user.updateLastName(resource.getLastName());
 
         return repository.save(user);
+    }
+
+    public List<User> findUsers(String lastName) {
+        return repository.findUsers(lastName);
     }
 
     public User findUser(long userId) {
