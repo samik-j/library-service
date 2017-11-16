@@ -19,12 +19,14 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private UserService service;
-    private UserCreationValidator validator;
+    private UserCreationValidator creationValidator;
+    private UserUpdateValidator updateValidator;
 
     @Autowired
-    public UserController(UserService service, UserCreationValidator validator) {
+    public UserController(UserService service, UserCreationValidator creationValidator, UserUpdateValidator updateValidator) {
         this.service = service;
-        this.validator = validator;
+        this.creationValidator = creationValidator;
+        this.updateValidator = updateValidator;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -51,7 +53,7 @@ public class UserController {
         LOGGER.info("User added: firstName: {}, lastName: {}",
                 resource.getFirstName(), resource.getLastName());
 
-        ErrorsResource errorsResource = validator.validate(resource);
+        ErrorsResource errorsResource = creationValidator.validate(resource);
 
         if (errorsResource.getValidationErrors().isEmpty()) {
             User user = service.registerUser(resource);
@@ -63,16 +65,19 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public UserResource updateUser(@PathVariable long userId, @RequestBody UserResource resource) {
+    public ResponseEntity<Object> updateUser(@PathVariable long userId, @RequestBody UserResource resource) {
         LOGGER.info("User updated: firstName: {}, lastName: {}",
                 resource.getFirstName(), resource.getLastName());
 
-        if (service.userExists(userId)) {
+        validateUserExistence(userId);
+        ErrorsResource errorsResource = updateValidator.validate(resource);
+
+        if (errorsResource.getValidationErrors().isEmpty()) {
             User user = service.updateUser(userId, resource);
 
-            return getUserResource(user);
+            return new ResponseEntity<Object>(getUserResource(user), HttpStatus.OK);
         } else {
-            throw new ResourceNotFoundException();
+            return new ResponseEntity<Object>(errorsResource, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -88,5 +93,11 @@ public class UserController {
         }
 
         return userResources;
+    }
+
+    private void validateUserExistence(long userId) {
+        if(!service.userExists(userId)) {
+            throw new ResourceNotFoundException();
+        }
     }
 }
