@@ -54,7 +54,7 @@ public class BookServiceTest {
         long bookId = 1;
 
         when(repository.findOne(bookId)).thenReturn(bookToUpdate);
-        when(repository.save(bookUpdated)).thenReturn(bookUpdated);
+        when(repository.save(bookToUpdate)).thenReturn(bookUpdated);
 
         // when
         Book result = service.updateBook(bookId, resource);
