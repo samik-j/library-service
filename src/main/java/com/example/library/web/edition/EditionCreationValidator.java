@@ -22,11 +22,12 @@ public class EditionCreationValidator {
         if (resource.getIsbn() == null || resource.getIsbn().isEmpty()) {
             validationErrors.add("Isbn not specified");
         } else {
-            if (!validateUniqueIsbn(resource.getIsbn())) {
-                validationErrors.add("Isbn already exists");
-            }
             if (resource.getIsbn().length() != 8 && resource.getIsbn().length() != 13) {
                 validationErrors.add("Wrong isbn format");
+            } else {
+                if (!validateUniqueIsbn(resource.getIsbn())) {
+                    validationErrors.add("Isbn already exists");
+                }
             }
         }
         if (resource.getPublicationYear() == null) {
