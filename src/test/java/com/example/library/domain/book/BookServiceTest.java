@@ -4,14 +4,11 @@ import com.example.library.web.book.BookResource;
 import org.junit.Test;
 
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +18,14 @@ public class BookServiceTest {
 
     private BookService service = new BookService(repository);
 
+    private BookResource getResource() {
+        BookResource resource = new BookResource();
+        resource.setTitle("title");
+        resource.setAuthor("author");
+        resource.setPublicationYear(Year.parse("2000"));
+
+        return resource;
+    }
 
     @Test
     public void shouldRegisterBook() {
@@ -44,7 +49,7 @@ public class BookServiceTest {
     public void shouldUpdateBook() {
         // given
         BookResource resource = getResource();
-        Book bookToUpdate = new Book("title2", "author", Year.parse("2001"));
+        Book bookToUpdate = new Book("title2", "author2", Year.parse("2001"));
         Book bookUpdated = new Book(resource.getTitle(), resource.getAuthor(), Year.parse("2001"));
         long bookId = 1;
 
@@ -55,11 +60,7 @@ public class BookServiceTest {
         Book result = service.updateBook(bookId, resource);
 
         // then
-        assertEquals("title", result.getTitle());
-        assertEquals("author", result.getAuthor());
-        assertEquals(Year.parse("2001"), result.getPublicationYear());
-        // czy
-        //assertEquals(bookUpdated, updated);
+        assertEquals(bookUpdated, result);
     }
 
     @Test
@@ -74,10 +75,7 @@ public class BookServiceTest {
         Book result = service.findBookById(bookId);
 
         // then
-        assertEquals("title", result.getTitle());
-        assertEquals("author", result.getAuthor());
-        assertEquals(Year.parse("2000"), result.getPublicationYear());
-        assertEquals(new HashSet<>(), result.getEditions());
+        assertEquals(book, result);
     }
 
     @Test
@@ -164,16 +162,6 @@ public class BookServiceTest {
 
         // then
         assertFalse(result);
-    }
-
-
-    private BookResource getResource() {
-        BookResource resource = new BookResource();
-        resource.setTitle("title");
-        resource.setAuthor("author");
-        resource.setPublicationYear(Year.parse("2000"));
-
-        return resource;
     }
 
 }

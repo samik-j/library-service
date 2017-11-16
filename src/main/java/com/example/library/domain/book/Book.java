@@ -104,28 +104,11 @@ public class Book {
 
         Book book = (Book) o;
 
-        if (id != book.id) {
-            return false;
-        }
-        if (title != null ? !title.equals(book.title) : book.title != null) {
-            return false;
-        }
-        if (author != null ? !author.equals(book.author) : book.author != null) {
-            return false;
-        }
-        if (publicationYear != null ? !publicationYear.equals(book.publicationYear) : book.publicationYear != null) {
-            return false;
-        }
-        return editions != null ? editions.equals(book.editions) : book.editions == null;
+        return id == book.id;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (publicationYear != null ? publicationYear.hashCode() : 0);
-        result = 31 * result + (editions != null ? editions.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }
