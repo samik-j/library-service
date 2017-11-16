@@ -62,4 +62,40 @@ public class UserResource {
     public void setBorrowed(int borrowed) {
         this.borrowed = borrowed;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UserResource resource = (UserResource) o;
+
+        if (id != resource.id) {
+            return false;
+        }
+        if (borrowed != resource.borrowed) {
+            return false;
+        }
+        if (firstName != null ? !firstName.equals(resource.firstName) : resource.firstName != null) {
+            return false;
+        }
+        if (lastName != null ? !lastName.equals(resource.lastName) : resource.lastName != null) {
+            return false;
+        }
+        return dateJoined != null ? dateJoined.equals(resource.dateJoined) : resource.dateJoined == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (dateJoined != null ? dateJoined.hashCode() : 0);
+        result = 31 * result + borrowed;
+        return result;
+    }
 }
