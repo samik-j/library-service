@@ -1,9 +1,9 @@
 package com.example.library.domain.loan;
 
-import com.example.library.domain.user.User;
-import com.example.library.domain.user.UserRepository;
 import com.example.library.domain.edition.Edition;
 import com.example.library.domain.edition.EditionRepository;
+import com.example.library.domain.user.User;
+import com.example.library.domain.user.UserRepository;
 import com.example.library.web.loan.LoanOverdue;
 import com.example.library.web.loan.LoanResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,10 +44,6 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
-    public boolean loanExists(long loanId) {
-        return loanRepository.exists(loanId);
-    }
-
     @Transactional
     public Loan returnLoan(long loanId) {
         Loan loan = loanRepository.findOne(loanId);
@@ -63,6 +58,10 @@ public class LoanService {
         editionRepository.save(edition);
 
         return loanRepository.save(loan);
+    }
+
+    public Loan findLoan(long loanId) {
+        return loanRepository.findOne(loanId);
     }
 
     public List<Loan> findLoans() {
@@ -85,16 +84,17 @@ public class LoanService {
         }
         throw new UnsupportedLoanOverdueException();
     }
+    
+    public boolean canBeReturned(long loanId) {
+        return !loanRepository.findOne(loanId).isReturned();
+    }
+
+    public boolean loanExists(long loanId) {
+        return loanRepository.exists(loanId);
+    }
 
     private class UnsupportedLoanOverdueException extends RuntimeException {
 
     }
 
-    public Loan findLoan(long loanId) {
-        return loanRepository.findOne(loanId);
-    }
-
-    public boolean canBeReturned(long loanId) {
-        return !loanRepository.findOne(loanId).isReturned();
-    }
 }
