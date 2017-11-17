@@ -70,7 +70,7 @@ public class Edition {
     }
 
     public void returnEdition() {
-        if (onLoan > 0) {
+        if (canBeReturned()) {
             --onLoan;
         } else {
             throw new InsufficientQuantityToDecreaseException();

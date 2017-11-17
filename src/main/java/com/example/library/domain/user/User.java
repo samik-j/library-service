@@ -69,7 +69,7 @@ public class User {
     }
 
     public void returnEdition() {
-        if (borrowed > 0) {
+        if (canReturn()) {
             --borrowed;
         } else {
             throw new InsufficientQuantityToDecreaseException();
