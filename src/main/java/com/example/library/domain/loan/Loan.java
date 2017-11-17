@@ -25,7 +25,7 @@ public class Loan {
     private Loan() {
     }
 
-    Loan(User user, Edition edition) {
+    public Loan(User user, Edition edition) {
         this.user = user;
         this.edition = edition;
         this.dateLent = LocalDate.now();
