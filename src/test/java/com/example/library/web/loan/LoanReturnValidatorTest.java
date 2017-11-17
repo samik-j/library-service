@@ -18,18 +18,23 @@ public class LoanReturnValidatorTest {
     private LoanService loanService = mock(LoanService.class);
     private LoanReturnValidator validator = new LoanReturnValidator(userService, editionService, loanService);
 
+    private LoanResource getLoanResourceMock(long userId, long editionId, long loanId) {
+        LoanResource resource = mock(LoanResource.class);
+
+        when(resource.getId()).thenReturn(loanId);
+        when(resource.getUserId()).thenReturn(userId);
+        when(resource.getEditionId()).thenReturn(editionId);
+
+        return resource;
+    }
+
     @Test
     public void shouldValidateWithNoErrors() {
         // given
         long userId = 1;
         long editionId = 1;
         long loanId = 1;
-
-        LoanResource resource = mock(LoanResource.class);
-
-        when(resource.getId()).thenReturn(loanId);
-        when(resource.getUserId()).thenReturn(userId);
-        when(resource.getEditionId()).thenReturn(editionId);
+        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
 
         when(loanService.canBeReturned(loanId)).thenReturn(true);
         when(userService.canReturn(userId)).thenReturn(true);
@@ -48,12 +53,7 @@ public class LoanReturnValidatorTest {
         long userId = 1;
         long editionId = 1;
         long loanId = 1;
-
-        LoanResource resource = mock(LoanResource.class);
-
-        when(resource.getId()).thenReturn(loanId);
-        when(resource.getUserId()).thenReturn(userId);
-        when(resource.getEditionId()).thenReturn(editionId);
+        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
 
         when(loanService.canBeReturned(loanId)).thenReturn(false);
 
@@ -71,12 +71,7 @@ public class LoanReturnValidatorTest {
         long userId = 1;
         long editionId = 1;
         long loanId = 1;
-
-        LoanResource resource = mock(LoanResource.class);
-
-        when(resource.getId()).thenReturn(loanId);
-        when(resource.getUserId()).thenReturn(userId);
-        when(resource.getEditionId()).thenReturn(editionId);
+        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
 
         when(loanService.canBeReturned(loanId)).thenReturn(true);
         when(userService.canReturn(userId)).thenReturn(false);
@@ -96,12 +91,7 @@ public class LoanReturnValidatorTest {
         long userId = 1;
         long editionId = 1;
         long loanId = 1;
-
-        LoanResource resource = mock(LoanResource.class);
-
-        when(resource.getId()).thenReturn(loanId);
-        when(resource.getUserId()).thenReturn(userId);
-        when(resource.getEditionId()).thenReturn(editionId);
+        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
 
         when(loanService.canBeReturned(loanId)).thenReturn(true);
         when(userService.canReturn(userId)).thenReturn(true);
@@ -114,4 +104,5 @@ public class LoanReturnValidatorTest {
         assertEquals(1, result.getValidationErrors().size());
         assertTrue(result.getValidationErrors().contains("Edition has not been loaned"));
     }
+
 }
