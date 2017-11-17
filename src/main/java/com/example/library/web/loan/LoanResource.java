@@ -82,4 +82,48 @@ public class LoanResource {
     public void setReturned(boolean returned) {
         this.returned = returned;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        LoanResource resource = (LoanResource) o;
+
+        if (id != resource.id) {
+            return false;
+        }
+        if (isOverdue != resource.isOverdue) {
+            return false;
+        }
+        if (returned != resource.returned) {
+            return false;
+        }
+        if (userId != null ? !userId.equals(resource.userId) : resource.userId != null) {
+            return false;
+        }
+        if (editionId != null ? !editionId.equals(resource.editionId) : resource.editionId != null) {
+            return false;
+        }
+        if (dateLent != null ? !dateLent.equals(resource.dateLent) : resource.dateLent != null) {
+            return false;
+        }
+        return dateToReturn != null ? dateToReturn.equals(resource.dateToReturn) : resource.dateToReturn == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (editionId != null ? editionId.hashCode() : 0);
+        result = 31 * result + (dateLent != null ? dateLent.hashCode() : 0);
+        result = 31 * result + (dateToReturn != null ? dateToReturn.hashCode() : 0);
+        result = 31 * result + (isOverdue ? 1 : 0);
+        result = 31 * result + (returned ? 1 : 0);
+        return result;
+    }
 }
