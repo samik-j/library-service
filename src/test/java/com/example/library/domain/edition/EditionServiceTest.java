@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +19,7 @@ public class EditionServiceTest {
     private EditionRepository editionRepository = mock(EditionRepository.class);
     private BookRepository bookRepository = mock(BookRepository.class);
 
-    EditionService service = new EditionService(editionRepository, bookRepository);
+    private EditionService service = new EditionService(editionRepository, bookRepository);
 
     private EditionResource getResource() {
         EditionResource resource = new EditionResource();
@@ -36,9 +37,9 @@ public class EditionServiceTest {
         Book book = mock(Book.class);
         Edition edition = new Edition(resource.getIsbn(), resource.getPublicationYear(), resource.getQuantity(), book);
         Book bookWithEdition = mock(Book.class);
-        bookWithEdition.addEdition(edition);
-
         long bookId = 1;
+
+        doNothing().when(book).addEdition(edition);
 
         when(bookRepository.findOne(bookId)).thenReturn(book);
         when(editionRepository.save(edition)).thenReturn(edition);
