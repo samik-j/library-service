@@ -84,7 +84,7 @@ public class LoanService {
         }
         throw new UnsupportedLoanOverdueException();
     }
-    
+
     public boolean canBeReturned(long loanId) {
         return !loanRepository.findOne(loanId).isReturned();
     }
