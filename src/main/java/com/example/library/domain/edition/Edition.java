@@ -57,10 +57,6 @@ public class Edition {
         return onLoan;
     }
 
-    public void setOnLoan(long onLoan) {
-        this.onLoan = onLoan;
-    }
-
     public void lend() {
         if (canBeLend()) {
             ++onLoan;
