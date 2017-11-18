@@ -18,12 +18,12 @@ public class LoanReturnValidatorTest {
     private LoanService loanService = mock(LoanService.class);
     private LoanReturnValidator validator = new LoanReturnValidator(userService, editionService, loanService);
 
-    private LoanResource getLoanResourceMock(long userId, long editionId, long loanId) {
-        LoanResource resource = mock(LoanResource.class);
+    private LoanResource createLoanResource() {
+        LoanResource resource = new LoanResource();
 
-        when(resource.getId()).thenReturn(loanId);
-        when(resource.getUserId()).thenReturn(userId);
-        when(resource.getEditionId()).thenReturn(editionId);
+        resource.setId(1L);
+        resource.setUserId(1L);
+        resource.setEditionId(1L);
 
         return resource;
     }
@@ -31,14 +31,11 @@ public class LoanReturnValidatorTest {
     @Test
     public void shouldValidateWithNoErrors() {
         // given
-        long userId = 1;
-        long editionId = 1;
-        long loanId = 1;
-        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
+        LoanResource resource = createLoanResource();
 
-        when(loanService.canBeReturned(loanId)).thenReturn(true);
-        when(userService.canReturn(userId)).thenReturn(true);
-        when(editionService.canBeReturned(editionId)).thenReturn(true);
+        when(loanService.canBeReturned(resource.getId())).thenReturn(true);
+        when(userService.canReturn(resource.getUserId())).thenReturn(true);
+        when(editionService.canBeReturned(resource.getEditionId())).thenReturn(true);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -48,14 +45,11 @@ public class LoanReturnValidatorTest {
     }
 
     @Test
-    public void shouldValidateWithNoErrorIfLoanWasReturned() {
+    public void shouldValidateWithErrorIfLoanWasReturned() {
         // given
-        long userId = 1;
-        long editionId = 1;
-        long loanId = 1;
-        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
+        LoanResource resource = createLoanResource();
 
-        when(loanService.canBeReturned(loanId)).thenReturn(false);
+        when(loanService.canBeReturned(resource.getId())).thenReturn(false);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -66,16 +60,13 @@ public class LoanReturnValidatorTest {
     }
 
     @Test
-    public void shouldValidateWithNoErrorIfUserDidNotBorrow() {
+    public void shouldValidateWithErrorIfUserDidNotBorrow() {
         // given
-        long userId = 1;
-        long editionId = 1;
-        long loanId = 1;
-        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
+        LoanResource resource = createLoanResource();
 
-        when(loanService.canBeReturned(loanId)).thenReturn(true);
-        when(userService.canReturn(userId)).thenReturn(false);
-        when(editionService.canBeReturned(editionId)).thenReturn(true);
+        when(loanService.canBeReturned(resource.getId())).thenReturn(true);
+        when(userService.canReturn(resource.getUserId())).thenReturn(false);
+        when(editionService.canBeReturned(resource.getEditionId())).thenReturn(true);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -86,16 +77,13 @@ public class LoanReturnValidatorTest {
     }
 
     @Test
-    public void shouldValidateWithNoErrorIfEditionWasNotLoaned() {
+    public void shouldValidateWithErrorIfEditionWasNotLoaned() {
         // given
-        long userId = 1;
-        long editionId = 1;
-        long loanId = 1;
-        LoanResource resource = getLoanResourceMock(userId, editionId, loanId);
+        LoanResource resource = createLoanResource();
 
-        when(loanService.canBeReturned(loanId)).thenReturn(true);
-        when(userService.canReturn(userId)).thenReturn(true);
-        when(editionService.canBeReturned(editionId)).thenReturn(false);
+        when(loanService.canBeReturned(resource.getId())).thenReturn(true);
+        when(userService.canReturn(resource.getUserId())).thenReturn(true);
+        when(editionService.canBeReturned(resource.getEditionId())).thenReturn(false);
 
         // when
         ErrorsResource result = validator.validate(resource);

@@ -17,7 +17,7 @@ public class LoanCreationValidatorTest {
     private EditionService editionService = mock(EditionService.class);
     private LoanCreationValidator validator = new LoanCreationValidator(userService, editionService);
 
-    private LoanResource getLoanResource(Long userId, Long editionId) {
+    private LoanResource createLoanResource(Long userId, Long editionId) {
         LoanResource resource = new LoanResource();
 
         resource.setUserId(userId);
@@ -29,15 +29,12 @@ public class LoanCreationValidatorTest {
     @Test
     public void shouldValidateWithNoErrors() {
         // given
-        Long userId = 1L;
-        Long editionId = 1L;
+        LoanResource resource = createLoanResource(1L, 1L);
 
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(true);
-        when(editionService.editionExists(editionId)).thenReturn(true);
-        when(userService.canBorrow(userId)).thenReturn(true);
-        when(editionService.canBeLend(editionId)).thenReturn(true);
+        when(userService.userExists(resource.getUserId())).thenReturn(true);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(true);
+        when(userService.canBorrow(resource.getUserId())).thenReturn(true);
+        when(editionService.canBeLend(resource.getEditionId())).thenReturn(true);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -49,13 +46,10 @@ public class LoanCreationValidatorTest {
     @Test
     public void shouldValidateWithErrorIfUserIdIsNull() {
         // given
-        Long userId = null;
-        Long editionId = 1L;
+        LoanResource resource = createLoanResource(null, 1L);
 
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(editionService.editionExists(editionId)).thenReturn(true);
-        when(editionService.canBeLend(editionId)).thenReturn(true);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(true);
+        when(editionService.canBeLend(resource.getEditionId())).thenReturn(true);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -66,35 +60,13 @@ public class LoanCreationValidatorTest {
     }
 
     @Test
-    public void shouldValidateWithErrorIfEditionIdIsNull() {
-        // given
-        Long userId = 1L;
-        Long editionId = null;
-
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(true);
-        when(userService.canBorrow(userId)).thenReturn(true);
-
-        // when
-        ErrorsResource result = validator.validate(resource);
-
-        // then
-        assertEquals(1, result.getValidationErrors().size());
-        assertTrue(result.getValidationErrors().contains("Edition id not specified"));
-    }
-
-    @Test
     public void shouldValidateWithErrorIfUserDoesNotExist() {
         // given
-        Long userId = 1L;
-        Long editionId = 1L;
+        LoanResource resource = createLoanResource(1L, 1L);
 
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(false);
-        when(editionService.editionExists(editionId)).thenReturn(true);
-        when(editionService.canBeLend(editionId)).thenReturn(true);
+        when(userService.userExists(resource.getUserId())).thenReturn(false);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(true);
+        when(editionService.canBeLend(resource.getEditionId())).thenReturn(true);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -105,37 +77,14 @@ public class LoanCreationValidatorTest {
     }
 
     @Test
-    public void shouldValidateWithErrorIfEditionDoesNotExist() {
-        // given
-        Long userId = 1L;
-        Long editionId = 1L;
-
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(true);
-        when(userService.canBorrow(userId)).thenReturn(true);
-        when(editionService.editionExists(editionId)).thenReturn(false);
-
-        // when
-        ErrorsResource result = validator.validate(resource);
-
-        // then
-        assertEquals(1, result.getValidationErrors().size());
-        assertTrue(result.getValidationErrors().contains("Edition does not exist"));
-    }
-
-    @Test
     public void shouldValidateWithErrorIfUserCanNotBorrow() {
         // given
-        Long userId = 1L;
-        Long editionId = 1L;
+        LoanResource resource = createLoanResource(1L, 1L);
 
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(true);
-        when(userService.canBorrow(userId)).thenReturn(false);
-        when(editionService.editionExists(editionId)).thenReturn(true);
-        when(editionService.canBeLend(editionId)).thenReturn(true);
+        when(userService.userExists(resource.getUserId())).thenReturn(true);
+        when(userService.canBorrow(resource.getUserId())).thenReturn(false);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(true);
+        when(editionService.canBeLend(resource.getEditionId())).thenReturn(true);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -146,17 +95,47 @@ public class LoanCreationValidatorTest {
     }
 
     @Test
+    public void shouldValidateWithErrorIfEditionIdIsNull() {
+        // given
+        LoanResource resource = createLoanResource(1L, null);
+
+        when(userService.userExists(resource.getUserId())).thenReturn(true);
+        when(userService.canBorrow(resource.getUserId())).thenReturn(true);
+
+        // when
+        ErrorsResource result = validator.validate(resource);
+
+        // then
+        assertEquals(1, result.getValidationErrors().size());
+        assertTrue(result.getValidationErrors().contains("Edition id not specified"));
+    }
+
+    @Test
+    public void shouldValidateWithErrorIfEditionDoesNotExist() {
+        // given
+        LoanResource resource = createLoanResource(1L, 1L);
+
+        when(userService.userExists(resource.getUserId())).thenReturn(true);
+        when(userService.canBorrow(resource.getUserId())).thenReturn(true);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(false);
+
+        // when
+        ErrorsResource result = validator.validate(resource);
+
+        // then
+        assertEquals(1, result.getValidationErrors().size());
+        assertTrue(result.getValidationErrors().contains("Edition does not exist"));
+    }
+
+    @Test
     public void shouldValidateWithErrorIfEditionCanNotBeLend() {
         // given
-        Long userId = 1L;
-        Long editionId = 1L;
+        LoanResource resource = createLoanResource(1L, 1L);
 
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(true);
-        when(userService.canBorrow(userId)).thenReturn(true);
-        when(editionService.editionExists(editionId)).thenReturn(true);
-        when(editionService.canBeLend(editionId)).thenReturn(false);
+        when(userService.userExists(resource.getUserId())).thenReturn(true);
+        when(userService.canBorrow(resource.getUserId())).thenReturn(true);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(true);
+        when(editionService.canBeLend(resource.getEditionId())).thenReturn(false);
 
         // when
         ErrorsResource result = validator.validate(resource);
@@ -169,14 +148,11 @@ public class LoanCreationValidatorTest {
     @Test
     public void shouldValidateWithErrors() {
         // given
-        Long userId = 1L;
-        Long editionId = 1L;
+        LoanResource resource = createLoanResource(1L, 1L);
 
-        LoanResource resource = getLoanResource(userId, editionId);
-
-        when(userService.userExists(userId)).thenReturn(true);
-        when(userService.canBorrow(userId)).thenReturn(false);
-        when(editionService.editionExists(editionId)).thenReturn(false);
+        when(userService.userExists(resource.getUserId())).thenReturn(true);
+        when(userService.canBorrow(resource.getUserId())).thenReturn(false);
+        when(editionService.editionExists(resource.getEditionId())).thenReturn(false);
 
         // when
         ErrorsResource result = validator.validate(resource);
