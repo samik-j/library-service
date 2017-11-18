@@ -5,9 +5,9 @@ import com.example.library.web.ErrorsResource;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertTrue;
 
 public class UserCreationValidatorTest {
 
@@ -17,11 +17,9 @@ public class UserCreationValidatorTest {
     @Test
     public void shouldValidateWithNoErrors() {
         // given
-        UserResource resource = new UserResource();
-        resource.setFirstName("First");
-        resource.setLastName("Last");
+        UserResource resource = createResource("First", "Last");
 
-        when(service.hasNoSuchUser(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -31,13 +29,11 @@ public class UserCreationValidatorTest {
     }
 
     @Test
-    public void shouldHaveErrorWhenFirstNameIsNullOrEmpty() {
+    public void shouldHaveErrorWhenFirstNameIsEmpty() {
         // given
-        UserResource resource = new UserResource();
-        resource.setFirstName("");
-        resource.setLastName("Last");
+        UserResource resource = createResource("", "Last");
 
-        when(service.hasNoSuchUser(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -48,12 +44,41 @@ public class UserCreationValidatorTest {
     }
 
     @Test
-    public void shouldHaveErrorWhenLastNameIsNullOrEmpty() {
+    public void shouldHaveErrorWhenFirstNameIsNull() {
         // given
-        UserResource resource = new UserResource();
-        resource.setFirstName("First");
+        UserResource resource = createResource(null, "Last");
 
-        when(service.hasNoSuchUser(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(true);
+
+        // when
+        ErrorsResource errorsResource = validator.validate(resource);
+
+        // then
+        assertEquals(1, errorsResource.getValidationErrors().size());
+        assertTrue(errorsResource.getValidationErrors().contains("First name not specified"));
+    }
+
+    @Test
+    public void shouldHaveErrorWhenLastNameIsEmpty() {
+        // given
+        UserResource resource = createResource("First", "");
+
+        when(service.userExists(resource)).thenReturn(true);
+
+        // when
+        ErrorsResource errorsResource = validator.validate(resource);
+
+        // then
+        assertEquals(1, errorsResource.getValidationErrors().size());
+        assertTrue(errorsResource.getValidationErrors().contains("Last name not specified"));
+    }
+
+    @Test
+    public void shouldHaveErrorWhenLastNameIsNull() {
+        // given
+        UserResource resource = createResource("First", null);
+
+        when(service.userExists(resource)).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -66,11 +91,9 @@ public class UserCreationValidatorTest {
     @Test
     public void shouldHaveErrorWhenUserAlreadyExists() {
         // given
-        UserResource resource = new UserResource();
-        resource.setFirstName("First");
-        resource.setLastName("Last");
+        UserResource resource = createResource("First", "Last");
 
-        when(service.hasNoSuchUser(resource)).thenReturn(false);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -85,7 +108,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = new UserResource();
 
-        when(service.hasNoSuchUser(resource)).thenReturn(false);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -94,5 +117,14 @@ public class UserCreationValidatorTest {
         assertEquals(2, errorsResource.getValidationErrors().size());
         assertTrue(errorsResource.getValidationErrors().contains("Last name not specified"));
         assertTrue(errorsResource.getValidationErrors().contains("First name not specified"));
+    }
+
+    private UserResource createResource(String first, String lastName) {
+        UserResource resource = new UserResource();
+
+        resource.setFirstName(first);
+        resource.setLastName(lastName);
+
+        return resource;
     }
 }
