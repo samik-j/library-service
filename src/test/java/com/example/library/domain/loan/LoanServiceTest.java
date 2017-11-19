@@ -23,69 +23,14 @@ public class LoanServiceTest {
 
     private LoanService service = new LoanService(loanRepository, userRepository, editionRepository);
 
-    private LoanResource getResource(long userId, long editionId) {
-        LoanResource resource = new LoanResource();
-
-        resource.setUserId(userId);
-        resource.setEditionId(editionId);
-
-        return resource;
-    }
-
-    private User getUserMock(long userId) {
-        User user = mock(User.class);
-
-        doNothing().when(user).borrow();
-        doNothing().when(user).returnEdition();
-        when(user.getId()).thenReturn(userId);
-
-        return user;
-    }
-
-    private Edition getEditionMock(long editionId) {
-        Edition edition = mock(Edition.class);
-
-        doNothing().when(edition).lend();
-        doNothing().when(edition).returnEdition();
-        when(edition.getId()).thenReturn(editionId);
-
-        return edition;
-    }
-
-    private Loan getLoanMock(long loanId) {
-        Loan loan = mock(Loan.class);
-
-        doNothing().when(loan).returnLoan();
-
-        return loan;
-    }
-
-    private Loan getReturnedLoanMock(long loanId) {
-        Loan loan = mock(Loan.class);
-
-        doNothing().when(loan).returnLoan();
-        when(loan.isReturned()).thenReturn(true);
-
-        return loan;
-    }
-
-    private Loan getOverdueLoanMock(long loanId) {
-        Loan loan = mock(Loan.class);
-
-        doNothing().when(loan).returnLoan();
-        when(loan.isOverdue()).thenReturn(true);
-
-        return loan;
-    }
-
     @Test
     public void shouldRegisterLoan() {
         // given
         long userId = 1;
         long editionId = 1;
-        Edition edition = getEditionMock(editionId);
-        User user = getUserMock(userId);
-        LoanResource resource = getResource(userId, editionId);
+        Edition edition = createEdition(editionId);
+        User user = createUser(userId);
+        LoanResource resource = createLoanResource(userId, editionId);
         Loan registered = new Loan(user, edition);
 
         when(editionRepository.findOne(editionId)).thenReturn(edition);
@@ -98,6 +43,8 @@ public class LoanServiceTest {
         Loan result = service.registerLoan(resource);
 
         // then
+        verify(edition, times(1)).lend();
+        verify(user, times(1)).borrow();
         assertEquals((long) resource.getUserId(), result.getUser().getId());
         assertEquals((long) resource.getEditionId(), result.getEdition().getId());
         assertFalse(result.isReturned());
@@ -110,10 +57,10 @@ public class LoanServiceTest {
         long loanId = 1;
         long userId = 1;
         long editionId = 1;
-        Edition edition = getEditionMock(editionId);
-        User user = getUserMock(userId);
+        Edition edition = createEdition(editionId);
+        User user = createUser(userId);
         Loan loan = new Loan(user, edition);
-        Loan loanReturned = getReturnedLoanMock(loanId);
+        Loan loanReturned = createReturnedLoan(loanId);
 
         when(loanRepository.findOne(loanId)).thenReturn(loan);
         when(editionRepository.findOne(editionId)).thenReturn(edition);
@@ -126,15 +73,16 @@ public class LoanServiceTest {
         Loan result = service.returnLoan(loanId);
 
         // then
+        verify(edition, times(1)).returnEdition();
+        verify(user, times(1)).returnEdition();
         assertTrue(result.isReturned());
     }
 
     @Test
     public void shouldFindAllLoans() {
         // given
-        Loan loan1 = getLoanMock(1);
-        Loan loan2 = getLoanMock(2);
-        List<Loan> loans = Arrays.asList(loan1, loan2);
+        Loan loan = createLoan(1);
+        List<Loan> loans = Arrays.asList(loan);
 
         when(loanRepository.findAll()).thenReturn(loans);
 
@@ -142,15 +90,20 @@ public class LoanServiceTest {
         List<Loan> result = service.findLoans();
 
         // then
-        assertEquals(2, result.size());
-        assertTrue(result.contains(loan1));
-        assertTrue(result.contains(loan2));
+        assertEquals(1, result.size());
+        assertTrue(result.contains(loan));
+        assertEquals(loan.getId(), result.get(0).getId());
+        assertEquals(loan.getUser(), result.get(0).getUser());
+        assertEquals(loan.getEdition(), result.get(0).getEdition());
+        assertEquals(loan.getDateLent(), result.get(0).getDateLent());
+        assertEquals(loan.getDateToReturn(), result.get(0).getDateToReturn());
+        assertEquals(loan.isReturned(), result.get(0).isReturned());
     }
 
     @Test
     public void shouldFindLoansOverdue() {
         // given
-        Loan loan = getOverdueLoanMock(1);
+        Loan loan = createOverdueLoan(1);
         List<Loan> loans = Arrays.asList(loan);
 
         when(loanRepository.findByDateToReturnBefore(LocalDate.now())).thenReturn(loans);
@@ -161,12 +114,18 @@ public class LoanServiceTest {
         // then
         assertEquals(1, result.size());
         assertTrue(result.contains(loan));
+        assertEquals(loan.getId(), result.get(0).getId());
+        assertEquals(loan.getUser(), result.get(0).getUser());
+        assertEquals(loan.getEdition(), result.get(0).getEdition());
+        assertEquals(loan.getDateLent(), result.get(0).getDateLent());
+        assertEquals(loan.getDateToReturn(), result.get(0).getDateToReturn());
+        assertEquals(loan.isReturned(), result.get(0).isReturned());
     }
 
     @Test
     public void shouldFindLoansReturned() {
         // given
-        Loan loan = getReturnedLoanMock(1);
+        Loan loan = createReturnedLoan(1);
         List<Loan> loans = Arrays.asList(loan);
 
         boolean returned = true;
@@ -179,12 +138,18 @@ public class LoanServiceTest {
         // then
         assertEquals(1, result.size());
         assertTrue(result.contains(loan));
+        assertEquals(loan.getId(), result.get(0).getId());
+        assertEquals(loan.getUser(), result.get(0).getUser());
+        assertEquals(loan.getEdition(), result.get(0).getEdition());
+        assertEquals(loan.getDateLent(), result.get(0).getDateLent());
+        assertEquals(loan.getDateToReturn(), result.get(0).getDateToReturn());
+        assertEquals(loan.isReturned(), result.get(0).isReturned());
     }
 
     @Test
     public void shouldFindLoansByBookId() {
         // given
-        Loan loan = getLoanMock(1);
+        Loan loan = createLoan(1);
         List<Loan> loans = Arrays.asList(loan);
 
         long bookId = 1;
@@ -197,13 +162,19 @@ public class LoanServiceTest {
         // then
         assertEquals(1, result.size());
         assertTrue(result.contains(loan));
+        assertEquals(loan.getId(), result.get(0).getId());
+        assertEquals(loan.getUser(), result.get(0).getUser());
+        assertEquals(loan.getEdition(), result.get(0).getEdition());
+        assertEquals(loan.getDateLent(), result.get(0).getDateLent());
+        assertEquals(loan.getDateToReturn(), result.get(0).getDateToReturn());
+        assertEquals(loan.isReturned(), result.get(0).isReturned());
     }
 
     @Test
     public void shouldFindLoanById() {
         // given
         long loanId = 1;
-        Loan loan = getLoanMock(loanId);
+        Loan loan = createLoan(loanId);
 
         when(loanRepository.findOne(loanId)).thenReturn(loan);
 
@@ -211,14 +182,19 @@ public class LoanServiceTest {
         Loan result = service.findLoan(loanId);
 
         // then
-        assertEquals(loan, result);
+        assertEquals(loan.getId(), result.getId());
+        assertEquals(loan.getUser(), result.getUser());
+        assertEquals(loan.getEdition(), result.getEdition());
+        assertEquals(loan.getDateLent(), result.getDateLent());
+        assertEquals(loan.getDateToReturn(), result.getDateToReturn());
+        assertEquals(loan.isReturned(), result.isReturned());
     }
 
     @Test
     public void caBeReturnedShouldReturnFalse() {
         // given
         long loanId = 1;
-        Loan loan = getReturnedLoanMock(loanId);
+        Loan loan = createReturnedLoan(1);
 
         when(loanRepository.findOne(loanId)).thenReturn(loan);
 
@@ -241,6 +217,77 @@ public class LoanServiceTest {
 
         // then
         assertTrue(result);
+    }
+
+    private LoanResource createLoanResource(long userId, long editionId) {
+        LoanResource resource = new LoanResource();
+
+        resource.setUserId(userId);
+        resource.setEditionId(editionId);
+
+        return resource;
+    }
+
+    private User createUser(long userId) {
+        User user = mock(User.class);
+
+        when(user.getId()).thenReturn(userId);
+
+        return user;
+    }
+
+    private Edition createEdition(long editionId) {
+        Edition edition = mock(Edition.class);
+
+        when(edition.getId()).thenReturn(editionId);
+
+        return edition;
+    }
+
+    private Loan createLoan(long loanId) {
+        Loan loan = mock(Loan.class);
+        User user = createUser(1);
+        Edition edition = createEdition(1);
+
+        when(loan.getId()).thenReturn(loanId);
+        when(loan.getUser()).thenReturn(user);
+        when(loan.getEdition()).thenReturn(edition);
+        when(loan.getDateLent()).thenReturn(LocalDate.now());
+        when(loan.getDateToReturn()).thenReturn(LocalDate.now().plusDays(14));
+        when(loan.isReturned()).thenReturn(false);
+
+        return loan;
+    }
+
+    private Loan createReturnedLoan(long loanId) {
+        Loan loan = mock(Loan.class);
+        User user = createUser(1);
+        Edition edition = createEdition(1);
+
+        when(loan.getId()).thenReturn(loanId);
+        when(loan.getUser()).thenReturn(user);
+        when(loan.getEdition()).thenReturn(edition);
+        when(loan.getDateLent()).thenReturn(LocalDate.now());
+        when(loan.getDateToReturn()).thenReturn(LocalDate.now().plusDays(14));
+        when(loan.isReturned()).thenReturn(true);
+
+        return loan;
+    }
+
+    private Loan createOverdueLoan(long loanId) {
+        Loan loan = mock(Loan.class);
+        User user = createUser(1);
+        Edition edition = createEdition(1);
+
+        when(loan.getId()).thenReturn(loanId);
+        when(loan.getUser()).thenReturn(user);
+        when(loan.getEdition()).thenReturn(edition);
+        when(loan.getDateLent()).thenReturn(LocalDate.now());
+        when(loan.getDateToReturn()).thenReturn(LocalDate.now().plusDays(14));
+        when(loan.isReturned()).thenReturn(false);
+        when(loan.isOverdue()).thenReturn(true);
+
+        return loan;
     }
 
 }
