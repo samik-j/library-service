@@ -19,7 +19,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = createResource("First", "Last");
 
-        when(service.userExists(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -33,7 +33,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = createResource("", "Last");
 
-        when(service.userExists(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -48,7 +48,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = createResource(null, "Last");
 
-        when(service.userExists(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -63,7 +63,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = createResource("First", "");
 
-        when(service.userExists(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -78,7 +78,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = createResource("First", null);
 
-        when(service.userExists(resource)).thenReturn(true);
+        when(service.userExists(resource)).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -93,7 +93,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = createResource("First", "Last");
 
-        when(service.userExists(resource)).thenReturn(false);
+        when(service.userExists(resource)).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -108,7 +108,7 @@ public class UserCreationValidatorTest {
         // given
         UserResource resource = new UserResource();
 
-        when(service.userExists(resource)).thenReturn(false);
+        when(service.userExists(resource)).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);

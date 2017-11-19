@@ -144,8 +144,8 @@ public class UserControllerTest {
     @Test
     public void shouldAddUserSuccess() throws Exception {
         // given
+        UserResource resource = createUserResource("First", "Last");
         User user = new User("First", "Last");
-        UserResource resource = new UserResource(user);
 
         when(creationValidator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
         when(service.registerUser(resource)).thenReturn(user);
@@ -167,8 +167,7 @@ public class UserControllerTest {
     @Test
     public void shouldAddUserFail400BadRequest() throws Exception {
         // given
-        User user = new User("First", "Last");
-        UserResource resource = new UserResource(user);
+        UserResource resource = createUserResource("First", "Last");
 
         when(creationValidator.validate(resource)).thenReturn(new ErrorsResource(Arrays.asList("User already exists")));
 
@@ -188,13 +187,13 @@ public class UserControllerTest {
     @Test
     public void shouldUpdateUserSuccess() throws Exception {
         // given
-        User user = new User("First", "Last2");
-        UserResource resource = new UserResource(user);
+        UserResource resource = createUserResource("First", "Last2");
+        User userUpdated = new User("First", "Last2");
         long userId = 1;
 
         when(service.userExists(userId)).thenReturn(true);
         when(updateValidator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
-        when(service.updateUser(userId, resource)).thenReturn(user);
+        when(service.updateUser(userId, resource)).thenReturn(userUpdated);
 
         // when
         ResultActions result = mockMvc.perform(put("/users/{userId}", userId)
@@ -213,8 +212,7 @@ public class UserControllerTest {
     @Test
     public void shouldUpdateUserFail404NotFound() throws Exception {
         // given
-        User user = new User("First", "Last2");
-        UserResource resource = new UserResource(user);
+        UserResource resource = createUserResource("First", "Last2");
         long userId = 1;
 
         when(service.userExists(userId)).thenReturn(false);
@@ -229,10 +227,9 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldUpdateUserFailIfParameterIsNullOrEmpty400BadRequest() throws Exception {
+    public void shouldUpdateUserFailIfParameterIsEmpty400BadRequest() throws Exception {
         // given
-        User user = new User("First", "");
-        UserResource resource = new UserResource(user);
+        UserResource resource = createUserResource("First", "");
         long userId = 1;
 
         when(service.userExists(userId)).thenReturn(true);
@@ -252,5 +249,11 @@ public class UserControllerTest {
         verify(updateValidator, times(1)).validate(resource);
         verify(service, times(0)).updateUser(userId, resource);
         verifyNoMoreInteractions(service);
+    }
+
+    private UserResource createUserResource(String firstName, String lastName) {
+        User user = new User(firstName, lastName);
+
+        return new UserResource(user);
     }
 }
