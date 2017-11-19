@@ -18,8 +18,9 @@ public class BookServiceTest {
 
     private BookService service = new BookService(repository);
 
-    private BookResource getResource() {
+    private BookResource createBookResource() {
         BookResource resource = new BookResource();
+
         resource.setTitle("title");
         resource.setAuthor("author");
         resource.setPublicationYear(Year.parse("2000"));
@@ -30,7 +31,7 @@ public class BookServiceTest {
     @Test
     public void shouldRegisterBook() {
         // given
-        BookResource resource = getResource();
+        BookResource resource = createBookResource();
         Book book = new Book(resource.getTitle(), resource.getAuthor(), resource.getPublicationYear());
 
         when(repository.save(book)).thenReturn(book);
@@ -48,7 +49,7 @@ public class BookServiceTest {
     @Test
     public void shouldUpdateBook() {
         // given
-        BookResource resource = getResource();
+        BookResource resource = createBookResource();
         Book bookToUpdate = new Book("title2", "author2", Year.parse("2001"));
         Book bookUpdated = new Book(resource.getTitle(), resource.getAuthor(), Year.parse("2001"));
         long bookId = 1;
@@ -60,7 +61,9 @@ public class BookServiceTest {
         Book result = service.updateBook(bookId, resource);
 
         // then
-        assertEquals(bookUpdated, result);
+        assertEquals(bookUpdated.getTitle(), result.getTitle());
+        assertEquals(bookUpdated.getAuthor(), result.getAuthor());
+        assertEquals(bookUpdated.getPublicationYear(), result.getPublicationYear());
     }
 
     @Test
@@ -75,7 +78,9 @@ public class BookServiceTest {
         Book result = service.findBookById(bookId);
 
         // then
-        assertEquals(book, result);
+        assertEquals(book.getTitle(), result.getTitle());
+        assertEquals(book.getAuthor(), result.getAuthor());
+        assertEquals(book.getPublicationYear(), result.getPublicationYear());
     }
 
     @Test
@@ -95,8 +100,12 @@ public class BookServiceTest {
 
         // then
         assertEquals(2, result.size());
-        assertEquals(book1, result.get(0));
-        assertEquals(book2, result.get(1));
+        assertEquals(book1.getTitle(), result.get(0).getTitle());
+        assertEquals(book1.getAuthor(), result.get(0).getAuthor());
+        assertEquals(book1.getPublicationYear(), result.get(0).getPublicationYear());
+        assertEquals(book2.getTitle(), result.get(1).getTitle());
+        assertEquals(book2.getAuthor(), result.get(1).getAuthor());
+        assertEquals(book2.getPublicationYear(), result.get(1).getPublicationYear());
     }
 
     @Test
@@ -116,38 +125,42 @@ public class BookServiceTest {
 
         // then
         assertEquals(2, result.size());
-        assertEquals(book1, result.get(0));
-        assertEquals(book2, result.get(1));
+        assertEquals(book1.getTitle(), result.get(0).getTitle());
+        assertEquals(book1.getAuthor(), result.get(0).getAuthor());
+        assertEquals(book1.getPublicationYear(), result.get(0).getPublicationYear());
+        assertEquals(book2.getTitle(), result.get(1).getTitle());
+        assertEquals(book2.getAuthor(), result.get(1).getAuthor());
+        assertEquals(book2.getPublicationYear(), result.get(1).getPublicationYear());
     }
 
     @Test
-    public void HasNoSuchBookShouldReturnFalseIfSuchBookExists() {
+    public void bookExistsShouldReturnTrueIfSuchBookExists() {
         // given
-        BookResource resource = getResource();
+        BookResource resource = createBookResource();
 
         when(repository.existsByTitleAndAuthor(resource.getTitle(), resource.getAuthor()))
                 .thenReturn(true);
 
         // when
-        boolean result = service.hasNoSuchBook(resource);
+        boolean result = service.bookExists(resource);
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
-    public void HasNoSuchBookShouldReturnTrueIfSuchBookNotExists() {
+    public void bookExistsReturnFalseTrueIfSuchBookNotExists() {
         // given
-        BookResource resource = getResource();
+        BookResource resource = createBookResource();
 
         when(repository.existsByTitleAndAuthor(resource.getTitle(), resource.getAuthor()))
                 .thenReturn(false);
 
         // when
-        boolean result = service.hasNoSuchBook(resource);
+        boolean result = service.bookExists(resource);
 
         // then
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
