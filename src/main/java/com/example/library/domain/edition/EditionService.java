@@ -45,8 +45,8 @@ public class EditionService {
         return editionRepository.findOne(editionId).canBeLend();
     }
 
-    public boolean hasNoSuchIsbn(String isbn) {
-        return !editionRepository.existsByIsbn(isbn);
+    public boolean isbnExists(String isbn) {
+        return editionRepository.existsByIsbn(isbn);
     }
 
     public boolean canBeReturned(long editionId) {

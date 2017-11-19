@@ -39,8 +39,8 @@ public class BookService {
         return repository.findBooks(title, author);
     }
 
-    public boolean hasNoSuchBook(BookResource resource) {
-        return !repository.existsByTitleAndAuthor(resource.getTitle(), resource.getAuthor());
+    public boolean bookExists(BookResource resource) {
+        return repository.existsByTitleAndAuthor(resource.getTitle(), resource.getAuthor());
     }
 
     public boolean bookExists(long bookId) {
