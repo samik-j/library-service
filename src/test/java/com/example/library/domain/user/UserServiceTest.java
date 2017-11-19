@@ -122,8 +122,6 @@ public class UserServiceTest {
     @Test
     public void shouldUserExist() {
         // given
-        User user = new User("First", "Last");
-
         long userId = 1;
 
         when(repository.exists(userId)).thenReturn(true);
@@ -136,37 +134,33 @@ public class UserServiceTest {
     }
 
     @Test
-    public void hasNoSuchUserShouldReturnTrueIfUserNotExists() {
+    public void userExistsShouldReturnFalseIfUserNotExists() {
         // given
         UserResource resource = getResource();
-
-        long userId = 1;
 
         when(repository.existsByFirstNameAndLastName(resource.getFirstName(), resource.getLastName()))
                 .thenReturn(false);
 
         // when
-        boolean result = service.hasNoSuchUser(resource);
+        boolean result = service.userExists(resource);
 
         // then
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
-    public void hasNoSuchUserShouldReturnFalseIfUserExists() {
+    public void userExistsShouldReturnTrueIfUserExists() {
         // given
         UserResource resource = getResource();
-
-        long userId = 1;
 
         when(repository.existsByFirstNameAndLastName(resource.getFirstName(), resource.getLastName()))
                 .thenReturn(true);
 
         // when
-        boolean result = service.hasNoSuchUser(resource);
+        boolean result = service.userExists(resource);
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
