@@ -61,8 +61,9 @@ public class EditionControllerTest {
                 .build();
     }
 
-    private EditionResource getResource() {
+    private EditionResource createEditionResource() {
         EditionResource resource = new EditionResource();
+
         resource.setIsbn("1234567890123");
         resource.setPublicationYear(Year.parse("2000"));
         resource.setQuantity(5);
@@ -73,16 +74,14 @@ public class EditionControllerTest {
     @Test
     public void shouldGetAllEditionsSuccess() throws Exception {
         // given
-        Book book = mock(Book.class);
+        Book book = new Book("Title", "Author", Year.parse("2000"));
         long bookId = 1;
 
-        List<Edition> editions = new ArrayList<>();
-        editions.add(new Edition("1234567890123", Year.parse("2001"), 5, book));
-        editions.add(new Edition("1234567890111", Year.parse("2010"), 3, book));
+        Edition edition = new Edition("1234567890123", Year.parse("2001"), 5, book);
+        List<Edition> editions = Arrays.asList(edition);
 
         String isbn = null;
 
-        when(book.getId()).thenReturn(bookId);
         when(bookService.bookExists(bookId)).thenReturn(true);
         when(editionService.findEditions(bookId, isbn)).thenReturn(editions);
 
@@ -92,31 +91,25 @@ public class EditionControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].isbn", is("1234567890123")))
                 .andExpect(jsonPath("$[0].publicationYear", is(2001)))
                 .andExpect(jsonPath("$[0].quantity", is(5)))
                 .andExpect(jsonPath("$[0].onLoan", is(0)))
-                .andExpect(jsonPath("$[0].bookId", is(1)))
-                .andExpect(jsonPath("$[1].isbn", is("1234567890111")))
-                .andExpect(jsonPath("$[1].publicationYear", is(2010)))
-                .andExpect(jsonPath("$[1].quantity", is(3)))
-                .andExpect(jsonPath("$[1].onLoan", is(0)))
-                .andExpect(jsonPath("$[1].bookId", is(1)));
+                .andExpect(jsonPath("$[0].bookId", is((int) edition.getBook().getId())));
     }
 
     @Test
     public void shouldGetEditionsByIsbnSuccess() throws Exception {
         // given
-        Book book = mock(Book.class);
+        Book book = new Book("Title", "Author", Year.parse("2000"));
         long bookId = 1;
 
-        List<Edition> editions = new ArrayList<>();
-        editions.add(new Edition("1234567890123", Year.parse("2001"), 5, book));
+        Edition edition = new Edition("1234567890123", Year.parse("2001"), 5, book);
+        List<Edition> editions = Arrays.asList(edition);
 
         String isbn = "1234567890123";
 
-        when(book.getId()).thenReturn(bookId);
         when(bookService.bookExists(bookId)).thenReturn(true);
         when(editionService.findEditions(bookId, isbn)).thenReturn(editions);
 
@@ -131,7 +124,7 @@ public class EditionControllerTest {
                 .andExpect(jsonPath("$[0].publicationYear", is(2001)))
                 .andExpect(jsonPath("$[0].quantity", is(5)))
                 .andExpect(jsonPath("$[0].onLoan", is(0)))
-                .andExpect(jsonPath("$[0].bookId", is(1)));
+                .andExpect(jsonPath("$[0].bookId", is((int) edition.getBook().getId())));
     }
 
     @Test
@@ -151,12 +144,11 @@ public class EditionControllerTest {
     @Test
     public void shouldAddEditionSuccess() throws Exception {
         // given
-        Book book = mock(Book.class);
+        Book book = new Book("Title", "Author", Year.parse("2000"));
         long bookId = 1;
+        EditionResource resource = createEditionResource();
         Edition edition = new Edition("1234567890123", Year.parse("2000"), 5, book);
-        EditionResource resource = getResource();
 
-        when(book.getId()).thenReturn(bookId);
         when(bookService.bookExists(bookId)).thenReturn(true);
         when(validator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
         when(editionService.registerEdition(bookId, resource)).thenReturn(edition);
@@ -172,14 +164,14 @@ public class EditionControllerTest {
                 .andExpect(jsonPath("$.publicationYear", is(2000)))
                 .andExpect(jsonPath("$.quantity", is(5)))
                 .andExpect(jsonPath("$.onLoan", is(0)))
-                .andExpect(jsonPath("$.bookId", is(1)));
+                .andExpect(jsonPath("$.bookId", is((int) edition.getBook().getId())));
     }
 
     @Test
     public void shouldAddEditionFail404NotFound() throws Exception {
         // given
         long bookId = 1;
-        EditionResource resource = getResource();
+        EditionResource resource = createEditionResource();
 
         when(bookService.bookExists(bookId)).thenReturn(false);
 
@@ -196,7 +188,7 @@ public class EditionControllerTest {
     public void shouldAddEditionFail400BadRequest() throws Exception {
         // given
         long bookId = 1;
-        EditionResource resource = getResource();
+        EditionResource resource = createEditionResource();
 
         when(bookService.bookExists(bookId)).thenReturn(true);
         when(validator.validate(resource)).thenReturn(new ErrorsResource(Arrays.asList("Isbn already exists")));

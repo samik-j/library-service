@@ -16,15 +16,22 @@ public class EditionCreationValidatorTest {
     private EditionService service = mock(EditionService.class);
     private EditionCreationValidator validator = new EditionCreationValidator(service);
 
+    private EditionResource createEditionResource(String isbn, int quantity, Year publicationYear) {
+        EditionResource resource = new EditionResource();
+
+        resource.setIsbn(isbn);
+        resource.setQuantity(quantity);
+        resource.setPublicationYear(publicationYear);
+
+        return resource;
+    }
+
     @Test
     public void shouldValidateWithNoErrors() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setIsbn("1234567890123");
-        resource.setQuantity(5);
-        resource.setPublicationYear(Year.parse("2000"));
+        EditionResource resource = createEditionResource("1234567890123", 5, Year.parse("2000"));
 
-        when(service.hasNoSuchIsbn(resource.getIsbn())).thenReturn(true);
+        when(service.isbnExists(resource.getIsbn())).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -34,13 +41,22 @@ public class EditionCreationValidatorTest {
     }
 
     @Test
-    public void shouldValidateWithErrorIfIsbnIsEmptyOrNull() {
+    public void shouldValidateWithErrorIfIsbnIsEmpty() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setQuantity(5);
-        resource.setPublicationYear(Year.parse("2000"));
+        EditionResource resource = createEditionResource("", 5, Year.parse("2000"));
 
-        when(service.hasNoSuchIsbn(resource.getIsbn())).thenReturn(true);
+        // when
+        ErrorsResource errorsResource = validator.validate(resource);
+
+        // then
+        assertEquals(1, errorsResource.getValidationErrors().size());
+        assertTrue(errorsResource.getValidationErrors().contains("Isbn not specified"));
+    }
+
+    @Test
+    public void shouldValidateWithErrorIfIsbnIsNull() {
+        // given
+        EditionResource resource = createEditionResource(null, 5, Year.parse("2000"));
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -53,10 +69,7 @@ public class EditionCreationValidatorTest {
     @Test
     public void shouldValidateWithErrorIfIsbnHasWrongFormat() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setIsbn("12345678901");
-        resource.setQuantity(5);
-        resource.setPublicationYear(Year.parse("2000"));
+        EditionResource resource = createEditionResource("12345", 5, Year.parse("2000"));
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -69,12 +82,9 @@ public class EditionCreationValidatorTest {
     @Test
     public void shouldValidateWithErrorIfIsbnAlreadyExists() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setIsbn("1234567890123");
-        resource.setQuantity(5);
-        resource.setPublicationYear(Year.parse("2000"));
+        EditionResource resource = createEditionResource("1234567890123", 5, Year.parse("2000"));
 
-        when(service.hasNoSuchIsbn(resource.getIsbn())).thenReturn(false);
+        when(service.isbnExists(resource.getIsbn())).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -87,11 +97,9 @@ public class EditionCreationValidatorTest {
     @Test
     public void shouldValidateWithErrorIfPublicationYearIsNull() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setIsbn("1234567890123");
-        resource.setQuantity(5);
+        EditionResource resource = createEditionResource("1234567890123", 5, null);
 
-        when(service.hasNoSuchIsbn(resource.getIsbn())).thenReturn(true);
+        when(service.isbnExists(resource.getIsbn())).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -104,12 +112,9 @@ public class EditionCreationValidatorTest {
     @Test
     public void shouldValidateWithErrorIfQuantityIsLessThanZero() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setIsbn("1234567890123");
-        resource.setQuantity(-5);
-        resource.setPublicationYear(Year.parse("2000"));
+        EditionResource resource = createEditionResource("1234567890123", -2, Year.parse("2000"));
 
-        when(service.hasNoSuchIsbn(resource.getIsbn())).thenReturn(true);
+        when(service.isbnExists(resource.getIsbn())).thenReturn(false);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
@@ -122,11 +127,9 @@ public class EditionCreationValidatorTest {
     @Test
     public void shouldValidateWithErrors() {
         // given
-        EditionResource resource = new EditionResource();
-        resource.setIsbn("1234567890123");
-        resource.setQuantity(-5);
+        EditionResource resource = createEditionResource("1234567890123", -2, null);
 
-        when(service.hasNoSuchIsbn(resource.getIsbn())).thenReturn(false);
+        when(service.isbnExists(resource.getIsbn())).thenReturn(true);
 
         // when
         ErrorsResource errorsResource = validator.validate(resource);
