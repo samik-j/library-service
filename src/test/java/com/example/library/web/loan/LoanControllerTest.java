@@ -1,5 +1,6 @@
 package com.example.library.web.loan;
 
+import com.example.library.domain.book.Book;
 import com.example.library.domain.edition.Edition;
 import com.example.library.domain.loan.Loan;
 import com.example.library.domain.loan.LoanService;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,69 +61,10 @@ public class LoanControllerTest {
                 .build();
     }
 
-    private Loan getNewLoan(long user1Id, long editionId) {
-        User user = mock(User.class);
-        Edition edition = mock(Edition.class);
-        Loan loan = new Loan(user, edition);
-
-        when(user.getId()).thenReturn(user1Id);
-        when(edition.getId()).thenReturn(editionId);
-
-        return loan;
-    }
-
-    private Loan getLoanOverdueNotReturnedMock(long loanId, long userId, long editionId) {
-        Loan loan = mock(Loan.class);
-        User user = mock(User.class);
-        Edition edition = mock(Edition.class);
-
-        when(user.getId()).thenReturn(userId);
-        when(edition.getId()).thenReturn(editionId);
-        when(loan.getId()).thenReturn(loanId);
-        when(loan.getUser()).thenReturn(user);
-        when(loan.getEdition()).thenReturn(edition);
-        when(loan.getDateLent()).thenReturn(LocalDate.parse("2017-10-10"));
-        when(loan.getDateToReturn()).thenReturn(LocalDate.parse("2017-10-24"));
-        when(loan.isReturned()).thenReturn(false);
-        when(loan.isOverdue()).thenReturn(true);
-
-        return loan;
-    }
-
-    private Loan getNewLoanReturnedMock(long loanId, long userId, long editionId) {
-        Loan loan = mock(Loan.class);
-        User user = mock(User.class);
-        Edition edition = mock(Edition.class);
-
-        when(user.getId()).thenReturn(userId);
-        when(edition.getId()).thenReturn(editionId);
-        when(loan.getId()).thenReturn(loanId);
-        when(loan.getUser()).thenReturn(user);
-        when(loan.getEdition()).thenReturn(edition);
-        when(loan.getDateLent()).thenReturn(LocalDate.now());
-        when(loan.getDateToReturn()).thenReturn(LocalDate.now().plusDays(14));
-        when(loan.isReturned()).thenReturn(true);
-        when(loan.isOverdue()).thenReturn(false);
-
-        return loan;
-    }
-
-    private LoanResource getLoanResource(long user1Id, long editionId) {
-        LoanResource resource = new LoanResource();
-
-        resource.setUserId(user1Id);
-        resource.setEditionId(editionId);
-
-        return resource;
-    }
-
     @Test
     public void shouldGetLoansOverdueNowSuccess() throws Exception {
         // given
-        long loanId = 1;
-        long userId = 1;
-        long editionId = 1;
-        Loan loan = getLoanOverdueNotReturnedMock(loanId, userId, editionId);
+        Loan loan = createOverdueNotReturnedLoan();
         List<Loan> loans = Arrays.asList(loan);
 
         when(service.findLoans(LoanOverdue.NOW)).thenReturn(loans);
@@ -133,23 +76,20 @@ public class LoanControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].editionId", is(1)))
-                //.andExpect(jsonPath("$[0].dateLent", is(LocalDate.parse("2017-10-10"))))
-                //.andExpect(jsonPath("$[0].dateToReturn", is(LocalDate.parse("2017-10-24"))))
-                .andExpect(jsonPath("$[0].returned", is(false)))
-                .andExpect(jsonPath("$[0].overdue", is(true)));
+                .andExpect(jsonPath("$[0].id", is((int) loan.getId())))
+                .andExpect(jsonPath("$[0].userId", is((int) loan.getUser().getId())))
+                .andExpect(jsonPath("$[0].editionId", is((int) loan.getEdition().getId())))
+                //.andExpect(jsonPath("$[0].dateLent", is(loan.getDateLent())))
+                //.andExpect(jsonPath("$[0].dateToReturn", is(loan.getDateToReturn)))
+                .andExpect(jsonPath("$[0].returned", is(loan.isReturned())))
+                .andExpect(jsonPath("$[0].overdue", is(loan.isOverdue())));
     }
 
 
     @Test
     public void shouldGetLoansNotReturnedSuccess() throws Exception {
         // given
-        long userId = 1;
-        long editionId = 1;
-        long loanId = 1;
-        Loan loan = getLoanOverdueNotReturnedMock(loanId, userId, editionId);
+        Loan loan = createOverdueNotReturnedLoan();
         List<Loan> loans = Arrays.asList(loan);
 
         boolean returned = false;
@@ -163,21 +103,19 @@ public class LoanControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].editionId", is(1)))
-                //.andExpect(jsonPath("$[0].dateLent", is(LocalDate.parse("2017-10-10"))))
-                //.andExpect(jsonPath("$[0].dateToReturn", is(LocalDate.parse("2017-10-24"))))
-                .andExpect(jsonPath("$[0].returned", is(false)))
-                .andExpect(jsonPath("$[0].overdue", is(true)));
+                .andExpect(jsonPath("$[0].id", is((int) loan.getId())))
+                .andExpect(jsonPath("$[0].userId", is((int) loan.getUser().getId())))
+                .andExpect(jsonPath("$[0].editionId", is((int) loan.getEdition().getId())))
+                //.andExpect(jsonPath("$[0].dateLent", is(loan.getDateLent())))
+                //.andExpect(jsonPath("$[0].dateToReturn", is(loan.getDateToReturn())))
+                .andExpect(jsonPath("$[0].returned", is(loan.isReturned())))
+                .andExpect(jsonPath("$[0].overdue", is(loan.isOverdue())));
     }
 
     @Test
     public void shouldGetLoansByBookIdSuccess() throws Exception {
         // given
-        long userId = 1;
-        long editionId = 1;
-        Loan loan = getNewLoan(userId, editionId);
+        Loan loan = createLoan();
         List<Loan> loans = Arrays.asList(loan);
 
         long bookId = 1;
@@ -191,20 +129,19 @@ public class LoanControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].editionId", is(1)))
-                //.andExpect(jsonPath("$[0].dateLent", is(LocalDate.now())))
-                //.andExpect(jsonPath("$[0].dateToReturn", is(LocalDate.now().plusDays(14))))
-                .andExpect(jsonPath("$[0].returned", is(false)))
-                .andExpect(jsonPath("$[0].overdue", is(false)));
+                .andExpect(jsonPath("$[0].id", is((int) loan.getId())))
+                .andExpect(jsonPath("$[0].userId", is((int) loan.getUser().getId())))
+                .andExpect(jsonPath("$[0].editionId", is((int) loan.getEdition().getId())))
+                //.andExpect(jsonPath("$[0].dateLent", is(loan.getDateLent())))
+                //.andExpect(jsonPath("$[0].dateToReturn", is(loan.getDateToReturn)))
+                .andExpect(jsonPath("$[0].returned", is(loan.isReturned())))
+                .andExpect(jsonPath("$[0].overdue", is(loan.isOverdue())));
     }
 
     @Test
     public void shouldGetLoansAllSuccess() throws Exception {
         // given
-        long userId = 1;
-        long editionId = 1;
-        Loan loan = getNewLoan(userId, editionId);
+        Loan loan = createLoan();
         List<Loan> loans = Arrays.asList(loan);
 
         when(service.findLoans()).thenReturn(loans);
@@ -216,21 +153,22 @@ public class LoanControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].editionId", is(1)))
-                //.andExpect(jsonPath("$[0].dateLent", is(LocalDate.now())))
-                //.andExpect(jsonPath("$[0].dateToReturn", is(LocalDate.now().plusDays(14))))
-                .andExpect(jsonPath("$[0].returned", is(false)))
-                .andExpect(jsonPath("$[0].overdue", is(false)));
+                .andExpect(jsonPath("$[0].id", is((int) loan.getId())))
+                .andExpect(jsonPath("$[0].userId", is((int) loan.getUser().getId())))
+                .andExpect(jsonPath("$[0].editionId", is((int) loan.getEdition().getId())))
+                //.andExpect(jsonPath("$[0].dateLent", is(loan.getDateLent())))
+                //.andExpect(jsonPath("$[0].dateToReturn", is(loan.getDateToReturn)))
+                .andExpect(jsonPath("$[0].returned", is(loan.isReturned())))
+                .andExpect(jsonPath("$[0].overdue", is(loan.isOverdue())));
     }
 
     @Test
     public void shouldLendSuccess() throws Exception {
         // given
-        long user1Id = 1;
-        long editionId = 1;
-        Loan loan = getNewLoan(user1Id, editionId);
-        LoanResource resource = getLoanResource(user1Id, editionId);
+        long userId = 0;
+        long editionId = 0;
+        LoanResource resource = createLoanResource(userId, editionId);
+        Loan loan = createLoan();
 
         when(creationValidator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
         when(service.registerLoan(resource)).thenReturn(loan);
@@ -243,21 +181,20 @@ public class LoanControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.userId", is(1)))
-                .andExpect(jsonPath("$.editionId", is(1)))
+                .andExpect(jsonPath("$.userId", is((int) userId)))
+                .andExpect(jsonPath("$.editionId", is((int) editionId)))
                 //.andExpect(jsonPath("$.dateLent", is(LocalDate.now())))
                 //.andExpect(jsonPath("$.dateToReturn", is(LocalDate.now().plusDays(14))))
                 .andExpect(jsonPath("$.returned", is(false)))
                 .andExpect(jsonPath("$.overdue", is(false)));
     }
 
-
     @Test
     public void shouldLendFailIfUserDoesNotExist400BadRequest() throws Exception {
         // given
         long userId = 1;
         long editionId = 1;
-        LoanResource resource = getLoanResource(userId, editionId);
+        LoanResource resource = createLoanResource(userId, editionId);
 
         when(creationValidator.validate(resource)).thenReturn(new ErrorsResource(Arrays.asList("User does not exist")));
 
@@ -279,15 +216,15 @@ public class LoanControllerTest {
     public void shouldReturnLoanSuccess() throws Exception {
         // given
         long loanId = 1;
-        long userId = 1;
-        long editionId = 1;
-        Loan loan = getNewLoan(userId, editionId);
+
+        Loan loan = createLoan();
         LoanResource resource = new LoanResource(loan);
-        Loan loanReturned = getNewLoanReturnedMock(loanId, userId, editionId);
+        Loan loanReturned = createReturnedLoan(loan);
 
         when(service.loanExists(loanId)).thenReturn(true);
         when(service.findLoan(loanId)).thenReturn(loan);
         when(returnValidator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
+
         when(service.returnLoan(loanId)).thenReturn(loanReturned);
 
         // when
@@ -296,11 +233,13 @@ public class LoanControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.userId", is(1)))
-                .andExpect(jsonPath("$.editionId", is(1)))
+                .andExpect(jsonPath("$.id", is((int) resource.getId())))
+                .andExpect(jsonPath("$.userId", is(resource.getUserId().intValue())))
+                .andExpect(jsonPath("$.editionId", is(resource.getEditionId().intValue())))
+                //.andExpect(jsonPath("$.dateLent", is(resource.getDateLent())))
+                //.andExpect(jsonPath("$.dateToReturn", is(resource.getDateToReturn())))
                 .andExpect(jsonPath("$.returned", is(true)))
-                .andExpect(jsonPath("$.overdue", is(false)));
+                .andExpect(jsonPath("$.overdue", is(resource.isOverdue())));
     }
 
     @Test
@@ -321,9 +260,8 @@ public class LoanControllerTest {
     public void shouldReturnLoanFailIfLoanAlreadyReturned400BadRequest() throws Exception {
         // given
         long loanId = 1;
-        long userId = 1;
-        long editionId = 1;
-        Loan loan = getNewLoanReturnedMock(loanId, userId, editionId);
+
+        Loan loan = createReturnedLoan(createLoan());
         LoanResource resource = new LoanResource(loan);
 
         when(service.loanExists(loanId)).thenReturn(true);
@@ -343,6 +281,52 @@ public class LoanControllerTest {
         verify(returnValidator, times(1)).validate(resource);
         verify(service, times(0)).returnLoan(loanId);
         verifyNoMoreInteractions(service);
+    }
+
+    private Loan createLoan() {
+        User user = new User("FirsName", "LastName");
+        Book book = new Book("Title", "Author", Year.parse("2000"));
+        Edition edition = new Edition("1234567890123", Year.parse("2000"), 5, book);
+
+        return new Loan(user, edition);
+    }
+
+    private Loan createOverdueNotReturnedLoan() {
+        Loan loan = createLoan();
+        Loan loanOverdue = mock(Loan.class);
+
+        when(loanOverdue.getId()).thenReturn(loan.getId());
+        when(loanOverdue.getUser()).thenReturn(loan.getUser());
+        when(loanOverdue.getEdition()).thenReturn(loan.getEdition());
+        when(loanOverdue.getDateLent()).thenReturn(LocalDate.parse("2017-10-10"));
+        when(loanOverdue.getDateToReturn()).thenReturn(LocalDate.parse("2017-10-24"));
+        when(loanOverdue.isReturned()).thenReturn(false);
+        when(loanOverdue.isOverdue()).thenReturn(true);
+
+        return loanOverdue;
+    }
+
+    private Loan createReturnedLoan(Loan loan) {
+        Loan loanReturned = mock(Loan.class);
+
+        when(loanReturned.getId()).thenReturn(loan.getId());
+        when(loanReturned.getUser()).thenReturn(loan.getUser());
+        when(loanReturned.getEdition()).thenReturn(loan.getEdition());
+        when(loanReturned.getDateLent()).thenReturn(loan.getDateLent());
+        when(loanReturned.getDateToReturn()).thenReturn(loan.getDateToReturn());
+        when(loanReturned.isReturned()).thenReturn(true);
+        when(loanReturned.isOverdue()).thenReturn(loan.isOverdue());
+
+        return loanReturned;
+    }
+
+    private LoanResource createLoanResource(long user1Id, long editionId) {
+        LoanResource resource = new LoanResource();
+
+        resource.setUserId(user1Id);
+        resource.setEditionId(editionId);
+
+        return resource;
     }
 
 }
