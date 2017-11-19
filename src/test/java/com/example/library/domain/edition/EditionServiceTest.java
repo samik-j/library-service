@@ -10,9 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class EditionServiceTest {
 
@@ -21,8 +19,9 @@ public class EditionServiceTest {
 
     private EditionService service = new EditionService(editionRepository, bookRepository);
 
-    private EditionResource getResource() {
+    private EditionResource createEditionResource() {
         EditionResource resource = new EditionResource();
+
         resource.setIsbn("1234567890123");
         resource.setPublicationYear(Year.parse("2000"));
         resource.setQuantity(2);
@@ -33,13 +32,11 @@ public class EditionServiceTest {
     @Test
     public void shouldRegisterEdition() {
         // given
-        EditionResource resource = getResource();
+        EditionResource resource = createEditionResource();
         Book book = mock(Book.class);
         Edition edition = new Edition(resource.getIsbn(), resource.getPublicationYear(), resource.getQuantity(), book);
         Book bookWithEdition = mock(Book.class);
         long bookId = 1;
-
-        doNothing().when(book).addEdition(edition);
 
         when(bookRepository.findOne(bookId)).thenReturn(book);
         when(editionRepository.save(edition)).thenReturn(edition);
@@ -49,6 +46,7 @@ public class EditionServiceTest {
         Edition result = service.registerEdition(bookId, resource);
 
         // then
+        verify(book, times(1)).addEdition(edition);
         assertEquals(resource.getIsbn(), result.getIsbn());
         assertEquals(resource.getPublicationYear(), result.getPublicationYear());
         assertEquals(resource.getQuantity(), result.getQuantity());
@@ -58,10 +56,9 @@ public class EditionServiceTest {
     @Test
     public void shouldFindEditionsAllByBookId() {
         // given
-        Book book = mock(Book.class);
-        Edition edition1 = new Edition("1234567890123", Year.parse("2000"), 5, book);
-        Edition edition2 = new Edition("1234567890333", Year.parse("2002"), 2, book);
-        List<Edition> editions = Arrays.asList(edition1, edition2);
+        Book book = new Book("Title", "Author", Year.parse("2000"));
+        Edition edition = new Edition("1234567890123", Year.parse("2000"), 5, book);
+        List<Edition> editions = Arrays.asList(edition);
 
         long bookId = 1;
         String isbn = null;
@@ -72,17 +69,22 @@ public class EditionServiceTest {
         List<Edition> result = service.findEditions(bookId, isbn);
 
         // then
-        assertEquals(2, result.size());
-        assertEquals(edition1, result.get(0));
-        assertEquals(edition2, result.get(1));
+        assertEquals(1, result.size());
+        assertEquals(edition, result.get(0));
+        assertEquals(edition.getId(), result.get(0).getId());
+        assertEquals(edition.getIsbn(), result.get(0).getIsbn());
+        assertEquals(edition.getPublicationYear(), result.get(0).getPublicationYear());
+        assertEquals(edition.getQuantity(), result.get(0).getQuantity());
+        assertEquals(edition.getOnLoan(), result.get(0).getOnLoan());
+        assertEquals(edition.getBook(), result.get(0).getBook());
     }
 
     @Test
     public void shouldFindEditionsByIsbnByBookId() {
         // given
-        Book book = mock(Book.class);
-        Edition edition1 = new Edition("1234567890123", Year.parse("2000"), 5, book);
-        List<Edition> editions = Arrays.asList(edition1);
+        Book book = new Book("Title", "Author", Year.parse("2000"));
+        Edition edition = new Edition("1234567890123", Year.parse("2000"), 5, book);
+        List<Edition> editions = Arrays.asList(edition);
 
         long bookId = 1;
         String isbn = "1234567890123";
@@ -94,7 +96,13 @@ public class EditionServiceTest {
 
         // then
         assertEquals(1, result.size());
-        assertEquals(edition1, result.get(0));
+        assertEquals(edition, result.get(0));
+        assertEquals(edition.getId(), result.get(0).getId());
+        assertEquals(edition.getIsbn(), result.get(0).getIsbn());
+        assertEquals(edition.getPublicationYear(), result.get(0).getPublicationYear());
+        assertEquals(edition.getQuantity(), result.get(0).getQuantity());
+        assertEquals(edition.getOnLoan(), result.get(0).getOnLoan());
+        assertEquals(edition.getBook(), result.get(0).getBook());
     }
 
     @Test
@@ -160,31 +168,31 @@ public class EditionServiceTest {
     }
 
     @Test
-    public void hasNoSuchIsbnShouldReturnTrueIfEditionDoesNotExistByIsbn() {
+    public void isbnExistsShouldReturnFalseIfEditionDoesNotExistByIsbn() {
         // given
         String isbn = "1234567890123";
 
         when(editionRepository.existsByIsbn(isbn)).thenReturn(false);
 
         // when
-        boolean result = service.hasNoSuchIsbn(isbn);
+        boolean result = service.isbnExists(isbn);
 
         // then
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
-    public void hasNoSuchIsbnShouldReturnFalseIfEditionExistsByIsbn() {
+    public void isbnExistsShouldReturnTrueIfEditionExistsByIsbn() {
         // given
         String isbn = "1234567890123";
 
         when(editionRepository.existsByIsbn(isbn)).thenReturn(true);
 
         // when
-        boolean result = service.hasNoSuchIsbn(isbn);
+        boolean result = service.isbnExists(isbn);
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
     
 }
