@@ -26,10 +26,10 @@ public class LoanCreationValidator {
         if (resource.getUserId() == null) {
             validationErrors.add("User id not specified");
         } else {
-            if (!validateUserExistence(resource.getUserId())) {
+            if (!userExists(resource.getUserId())) {
                 validationErrors.add("User does not exist");
             } else {
-                if (!validateUserBorrowingAvailability(resource.getUserId())) {
+                if (!userCanBorrow(resource.getUserId())) {
                     validationErrors.add("Not possible to loan because user has reached borrowing limit");
                 }
             }
@@ -37,10 +37,10 @@ public class LoanCreationValidator {
         if (resource.getEditionId() == null) {
             validationErrors.add("Edition id not specified");
         } else {
-            if (!validateEditionExistence(resource.getEditionId())) {
+            if (!editionExists(resource.getEditionId())) {
                 validationErrors.add("Edition does not exist");
             } else {
-                if (!validateEditionAvailability(resource.getEditionId())) {
+                if (!editionCanBeLend(resource.getEditionId())) {
                     validationErrors.add("Not possible to loan because of insufficient quantity available");
                 }
             }
@@ -49,19 +49,19 @@ public class LoanCreationValidator {
         return new ErrorsResource(validationErrors);
     }
 
-    private boolean validateUserExistence(long userId) {
+    private boolean userExists(long userId) {
         return userService.userExists(userId);
     }
 
-    private boolean validateEditionExistence(long editionId) {
+    private boolean editionExists(long editionId) {
         return editionService.editionExists(editionId);
     }
 
-    private boolean validateEditionAvailability(long editionId) {
+    private boolean editionCanBeLend(long editionId) {
         return editionService.canBeLend(editionId);
     }
 
-    private boolean validateUserBorrowingAvailability(long userId) {
+    private boolean userCanBorrow(long userId) {
         return userService.canBorrow(userId);
     }
 }

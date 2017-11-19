@@ -27,13 +27,13 @@ public class UserCreationValidator {
         }
         if (resource.getFirstName() != null &&
                 resource.getLastName() != null &&
-                !validateUniqueUser(resource)) {
+                !isUserUnique(resource)) {
             validationErrors.add("User already exists");
         }
         return new ErrorsResource(validationErrors);
     }
 
-    private boolean validateUniqueUser(UserResource resource) {
-        return service.hasNoSuchUser(resource);
+    private boolean isUserUnique(UserResource resource) {
+        return !service.userExists(resource);
     }
 }

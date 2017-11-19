@@ -27,14 +27,14 @@ public class BookCreationValidator {
         }
         if (resource.getTitle() != null &&
                 resource.getAuthor() != null &&
-                !validateUniqueBook(resource)) {
+                !isBookUnique(resource)) {
             validationErrors.add("Book already exists");
         }
 
         return new ErrorsResource(validationErrors);
     }
 
-    private boolean validateUniqueBook(BookResource resource) {
-        return bookService.hasNoSuchBook(resource);
+    private boolean isBookUnique(BookResource resource) {
+        return !bookService.bookExists(resource);
     }
 }

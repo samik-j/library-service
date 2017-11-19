@@ -25,13 +25,13 @@ public class LoanReturnValidator {
     ErrorsResource validate(LoanResource resource) {
         List<String> validationErrors = new ArrayList<>();
 
-        if (!validateLoanCanBeReturned(resource.getId())) {
+        if (!loanCanBeReturned(resource.getId())) {
             validationErrors.add("Loan has been returned");
         } else {
-            if (!validateBorrowedByUser(resource.getUserId())) {
+            if (!userCanReturn(resource.getUserId())) {
                 validationErrors.add("User has no borrowed books");
             }
-            if (!validateOnLoanEdition(resource.getEditionId())) {
+            if (!editionCanBeReturned(resource.getEditionId())) {
                 validationErrors.add("Edition has not been loaned");
             }
         }
@@ -39,15 +39,15 @@ public class LoanReturnValidator {
         return new ErrorsResource(validationErrors);
     }
 
-    private boolean validateLoanCanBeReturned(long loanId) {
+    private boolean loanCanBeReturned(long loanId) {
         return loanService.canBeReturned(loanId);
     }
 
-    private boolean validateBorrowedByUser(long userId) {
+    private boolean userCanReturn(long userId) {
         return userService.canReturn(userId);
     }
 
-    private boolean validateOnLoanEdition(long editionId) {
+    private boolean editionCanBeReturned(long editionId) {
         return editionService.canBeReturned(editionId);
     }
 }
