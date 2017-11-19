@@ -173,8 +173,8 @@ public class BookControllerTest {
     @Test
     public void shouldRegisterBookSuccess() throws Exception {
         // given
+        BookResource resource = createBookResource("title", "author", Year.parse("2000"));
         Book book = new Book("title", "author", Year.parse("2000"));
-        BookResource resource = new BookResource(book);
 
         when(creationValidator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
         when(service.registerBook(resource)).thenReturn(book);
@@ -198,8 +198,7 @@ public class BookControllerTest {
     @Test
     public void shouldRegisterBookFailIfBookAlreadyExists400BadRequest() throws Exception {
         // given
-        Book book = new Book("title2", "author2", Year.parse("2000"));
-        BookResource resource = new BookResource(book);
+        BookResource resource = createBookResource("title2", "author2", Year.parse("2000"));
 
         when(creationValidator.validate(resource)).thenReturn(new ErrorsResource(Arrays.asList("Book already exists")));
 
@@ -221,13 +220,13 @@ public class BookControllerTest {
     @Test
     public void shouldUpdateBookSuccess() throws Exception {
         // given
-        Book book = new Book("title2", "author2", Year.parse("2000"));
-        BookResource resource = new BookResource(book);
+        BookResource resource = createBookResource("title2", "author2");
+        Book bookUpdated = new Book("title2", "author2", Year.parse("2000"));
         long bookId = 0;
 
         when(service.bookExists(bookId)).thenReturn(true);
         when(updateValidator.validate(resource)).thenReturn(new ErrorsResource(new ArrayList<>()));
-        when(service.updateBook(bookId, resource)).thenReturn(book);
+        when(service.updateBook(bookId, resource)).thenReturn(bookUpdated);
 
         // when
         ResultActions result = mockMvc.perform(put("/books/{bookId}", bookId)
@@ -246,11 +245,12 @@ public class BookControllerTest {
     }
 
     @Test
-    public void shouldUpdateUserFail404NotFound() throws Exception {
+    public void shouldUpdateBookFail404NotFound() throws Exception {
         // given
-        Book book = new Book("title2", "author2", Year.parse("2000"));
-        BookResource resource = new BookResource(book);
-        when(service.bookExists(1)).thenReturn(false);
+        BookResource resource = createBookResource("title2", "author2");
+        long bookId = 1;
+
+        when(service.bookExists(bookId)).thenReturn(false);
 
         //when
         ResultActions result = mockMvc.perform(put("/books/{bookId}", 1)
@@ -262,15 +262,13 @@ public class BookControllerTest {
     }
 
     @Test
-    public void shouldUpdateUserFailIfParameterIsNull400BadRequest() throws Exception {
+    public void shouldUpdateBookFailIfParameterIsNull400BadRequest() throws Exception {
         // given
-        Book book = new Book(null, "author2", Year.parse("2000"));
-        BookResource resource = new BookResource(book);
+        BookResource resource = createBookResource(null, "author2");
         long bookId = 1;
 
         when(service.bookExists(bookId)).thenReturn(true);
         when(updateValidator.validate(resource)).thenReturn(new ErrorsResource(Arrays.asList("Title not specified")));
-        when(service.updateBook(bookId, resource)).thenReturn(book);
 
         // when
         ResultActions result = mockMvc.perform(put("/books/{bookId}", 1)
@@ -286,6 +284,25 @@ public class BookControllerTest {
         verify(service, times(1)).bookExists(bookId);
         verify(service, times(0)).updateBook(bookId, resource);
         verifyNoMoreInteractions(service);
+    }
+
+    private BookResource createBookResource(String title, String author) {
+        BookResource resource = new BookResource();
+
+        resource.setTitle(title);
+        resource.setAuthor(author);
+
+        return resource;
+    }
+
+    private BookResource createBookResource(String title, String author, Year publicationYear) {
+        BookResource resource = new BookResource();
+
+        resource.setTitle(title);
+        resource.setAuthor(author);
+        resource.setPublicationYear(publicationYear);
+
+        return resource;
     }
 
 }
