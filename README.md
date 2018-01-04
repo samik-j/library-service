@@ -6,7 +6,7 @@ MySQL
 
 ## How to run
 ### Create a new database
-Run in Command Prompt
+Run in MySQL Command Line
 ```
 mysql> create database library;
 mysql> create user 'springuser'@'localhost' identified by 'ThePassword';
