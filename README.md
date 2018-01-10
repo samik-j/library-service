@@ -4,6 +4,7 @@ Program for managing online library
 ## Prerequisites
 * MySQL
 * Maven
+* JDK
 
 ## How to run
 ### Create a new database
