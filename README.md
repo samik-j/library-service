@@ -1,5 +1,6 @@
 # Library Service
-Program for managing online library
+Program for managing online library.
+Allows for user registration, browsing through books, borrowing and returning. There is an amount of each book, users have borrowing limits. Each loan is registered and has a return date, after which it is overdue.
 
 ## Prerequisites
 * MySQL
